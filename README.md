@@ -6,7 +6,7 @@ Indivisible is an optimized prime number generator written in C++.
 
 Building
 --------
-This project uses CMake to build.
+This project uses CMake to build and depends on OpenMP.
 
 ```bash
 $ cd build/
