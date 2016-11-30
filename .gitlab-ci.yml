@@ -1,0 +1,13 @@
+image: gcc
+
+build:
+    stage: build
+    before_script:
+        - apt update && apt -y install cmake
+    script:
+        - cd build/
+        - cmake -DCMAKE_BUILD_TYPE=Release ..
+        - make
+    artifacts:
+        paths:
+            - build/indivisible
