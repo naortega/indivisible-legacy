@@ -1,5 +1,7 @@
 Indivisible
 ===========
+[![build status](https://gitlab.com/Deathsbreed/Indivisible/badges/master/build.svg)](https://gitlab.com/Deathsbreed/Indivisible/commits/master)
+
 Indivisible is an optimized prime number generator written in C++.
 
 Building
