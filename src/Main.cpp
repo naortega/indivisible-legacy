@@ -29,6 +29,7 @@ int main(void) {
 				++num;
 			}
 			bool isPrime = true;
+			#pragma omp barrier
 			for(auto i : primes) {
 				if(i > myNum / 2) break;
 				if(myNum % i == 0) {
