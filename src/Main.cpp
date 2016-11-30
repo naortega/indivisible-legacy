@@ -1,6 +1,8 @@
 #include <iostream>
+#include <omp.h>
 #include <vector>
 #include <csignal>
+#include <cassert>
 
 static bool run;
 
@@ -16,17 +18,32 @@ int main(void) {
 	primes.push_back(2);
 	unsigned long long num = 2;
 
-	while(run) {
-		bool isPrime = true;
-		for(auto i : primes) {
-			if(i > num / 2) break;
-			if(num % i == 0) isPrime = false;
-		}
-		if(isPrime) {
-			primes.push_back(num);
-			std::cout << num << std::endl;
-		}
-		++num;
+	// Use for to accomodate for OpenMP
+	#pragma omp parallel
+	{
+		do {
+			unsigned long long myNum;
+			#pragma omp critical
+			{
+				myNum = num;
+				++num;
+			}
+			bool isPrime = true;
+			for(auto i : primes) {
+				if(i > myNum / 2) break;
+				if(myNum % i == 0) {
+					isPrime = false;
+					break;
+				}
+			}
+			if(isPrime) {
+				#pragma omp critical
+				{
+					primes.push_back(num);
+					std::cout << num << std::endl;
+				}
+			}
+		} while(run);
 	}
 
 	return 0;
