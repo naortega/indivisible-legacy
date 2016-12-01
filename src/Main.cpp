@@ -6,13 +6,14 @@
 
 static bool run;
 
-void leave(int signum);
-
 int main(void) {
 	std::cout << "Indivisible v0.1\n";
 	run = true;
 
-	signal(SIGINT, leave);
+	signal(SIGINT, [](int signum) {
+			std::cout << "Exiting (" << signum << ")\n";
+			run = false;
+			});
 
 	std::vector<unsigned long long> primes;
 	primes.push_back(2);
@@ -48,9 +49,4 @@ int main(void) {
 	}
 
 	return 0;
-}
-
-void leave(int signum) {
-	std::cout << "Exiting (" << signum << ")\n";
-	run = false;
 }
