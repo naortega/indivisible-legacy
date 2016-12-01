@@ -16,7 +16,7 @@ int main(void) {
 
 	std::vector<unsigned long long> primes;
 	primes.push_back(2);
-	unsigned long long num = 2;
+	unsigned long long num = 3;
 
 	// Use for to accomodate for OpenMP
 	#pragma omp parallel
@@ -26,7 +26,7 @@ int main(void) {
 			#pragma omp critical
 			{
 				myNum = num;
-				++num;
+				num += 2;
 			}
 			bool isPrime = true;
 			#pragma omp barrier
