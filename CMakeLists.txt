@@ -9,7 +9,12 @@ if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+set(CMAKE_MODULE_PATH
+	${CMAKE_MODULE_PATH}
+	${CMAKE_SOURCE_DIR}/cmake/)
+
 find_package(OpenMP REQUIRED)
+find_package(GMP REQUIRED)
 
 set(SRCS
     src/Main.cpp)
