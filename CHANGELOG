@@ -4,4 +4,8 @@ Change Log
 - v0.1: Initial release
 	- Basic prime calculation.
 	- Uses a growing vector of known primes and gets the modulus of the number divided by these primes.
-	- Uses type `long long` to hold prime numbers.
+	- Uses type `long long' to hold prime numbers.
+- v0.2: Multi-Precision
+	- Switch to C.
+	- Uses GNU Multiple Precision library (GMP) to hold prime numbers, allowing for 'infinite' size.
+	- Add `likely()' and `unlikely()' macros to optimize.
