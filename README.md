@@ -2,12 +2,15 @@ Indivisible
 ===========
 [![build status](https://gitlab.com/Deathsbreed/Indivisible/badges/master/build.svg)](https://gitlab.com/Deathsbreed/Indivisible/commits/master)
 
-Indivisible is an optimized prime number generator written in C++.
+Indivisible is an optimized prime number generator written in C.
 
 Building
 --------
-This project uses CMake to build and depends on OpenMP.
+There are multiple dependencies to install before compiling the project:
+- CMake
+- GMP
 
+Once the dependencies are installed you can compile by running the following from the root directory of the project:
 ```bash
 $ cd build/
 $ cmake ..

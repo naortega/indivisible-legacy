@@ -2,12 +2,19 @@ image: gcc
 
 build:
     stage: build
+    # Install dependencies
     before_script:
-        - apt update && apt -y install cmake libgomp1 libgmp-dev
+        - apt update && apt -y install cmake libgmp-dev
+    # Build the project
     script:
         - cd build/
         - cmake -DCMAKE_BUILD_TYPE=Release ..
         - make
+    # Find the resulting binary
     artifacts:
         paths:
             - build/indivisible
+    # Cache .o files for faster compiling
+    cache:
+        paths:
+            - "*.o"
