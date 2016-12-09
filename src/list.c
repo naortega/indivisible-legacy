@@ -25,7 +25,7 @@ void deInitList(List *l) {
 }
 
 void addToList(List *l, mpz_t n) {
-	if(l->end == l->size) {
+	if(unlikely(l->end == l->size)) {
 		l->size += BLOCK_SIZE;
 		if(unlikely(l->size == 0)) {
 			fprintf(stderr,
@@ -33,7 +33,7 @@ void addToList(List *l, mpz_t n) {
 			exit(1);
 		}
 		void *tmp = realloc(l->list, sizeof(mpz_t) * l->size);
-		if(!tmp) {
+		if(unlikely(!tmp)) {
 			fprintf(stderr, "Failed to allocate more memory to list!\n");
 			exit(1);
 		}

@@ -5,6 +5,7 @@
 #include <gmp.h>
 
 #include "list.h"
+#include "optimizers.h"
 
 static bool run;
 void leave();
@@ -27,7 +28,7 @@ int main(void) {
 	// Add 2, a known prime to this list
 	mpz_set_ui(num, 2);
 	addToList(&primes, num);
-	if(mpz_out_str(stdout, 10, num) == 0) {
+	if(unlikely(mpz_out_str(stdout, 10, num) == 0)) {
 		fprintf(stderr, "Could not print to `stdout'!\n");
 		exit(1);
 	}
@@ -43,7 +44,7 @@ int main(void) {
 
 		// `num' is a prime so we add it to the list and print it
 		addToList(&primes, num);
-		if(mpz_out_str(stdout, 10, num) == 0) {
+		if(unlikely(mpz_out_str(stdout, 10, num) == 0)) {
 			fprintf(stderr, "Could not print to `stdout'!\n");
 			exit(1);
 		}
