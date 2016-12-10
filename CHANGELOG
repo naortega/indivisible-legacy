@@ -9,3 +9,6 @@ Change Log
 	- Switch to C.
 	- Uses GNU Multiple Precision library (GMP) to hold prime numbers, allowing for 'infinite' size.
 	- Add `likely()' and `unlikely()' macros to optimize.
+- v0.2.1: Memory Leak Fixes
+	- Fixed a major memory leak at the end of the program.
+	- Added more optimizers
