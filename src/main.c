@@ -5,6 +5,7 @@
 #include <gmp.h>
 
 #include "list.h"
+#include "types.h"
 #include "optimizers.h"
 
 static bool run;
@@ -37,7 +38,7 @@ int main(void) {
 
 	do {
 		// Loop through found primes
-		for(unsigned long long int i = 0; i < primes.size; ++i) {
+		for(ulli i = 0; i < primes.size; ++i) {
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0) goto nextPrime;
 		}
