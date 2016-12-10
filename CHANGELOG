@@ -14,4 +14,4 @@ Change Log
 	- Added more optimizers.
 - v0.3: Optimizations
 	- Algorithm skips half the known primes.
-	- More accurate usage of `likely()' and `unlikely()' macros (aided by profiler).
+	- Removed `likely()' and `unlikely()' macros due to lack of information.
