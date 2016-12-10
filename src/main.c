@@ -6,13 +6,12 @@
 
 #include "list.h"
 #include "types.h"
-#include "optimizers.h"
 
 static bool run;
 void leave();
 
 int main(void) {
-	printf("Indivisible v0.2\n");
+	puts("Indivisible v0.2\n");
 
 	// Quit on ^C by setting `run = false'
 	run = true;
@@ -44,9 +43,8 @@ int main(void) {
 		// Calculate half of `num'
 		mpz_fdiv_q_ui(halfNum, num, 2);
 		// Loop through found primes
-		for(ulli i = 0; i < primes.size; ++i) {
-			// If the prime we're looking at is >= half of `num' then we can skip the rest
-			if(mpz_cmp(primes.list[i], halfNum) >= 0) break;
+		// Skip 2 because we're skipping even nymbers
+		for(ulli i = 1; mpz_cmp(primes.list[i], halfNum) >= 0; ++i) {
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0)
 				goto nextPrime;
@@ -74,6 +72,6 @@ nextPrime:
 }
 
 void leave() {
-	printf("Exiting...\n");
+	puts("Exiting...\n");
 	run = false;
 }

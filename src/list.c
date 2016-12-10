@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "optimizers.h"
-
 /**
  * This is the number of elements by which the list expands.
  * WARNING: Always use doubles for this number (2^X)
@@ -28,14 +26,14 @@ void deInitList(List *l) {
 }
 
 void addToList(List *l, mpz_t n) {
-	if(unlikely(l->end == l->size)) {
+	if(l->end == l->size) {
 		l->size += BLOCK_SIZE;
-		if(unlikely(l->size == 0)) {
+		if(l->size == 0) {
 			fprintf(stderr, "`l->size' has overflowed!\n");
 			exit(1);
 		}
 		void *tmp = realloc(l->list, sizeof(mpz_t) * l->size);
-		if(unlikely(!tmp)) {
+		if(!tmp) {
 			fprintf(stderr, "Failed to allocate more memory to list!\n");
 			exit(1);
 		}
