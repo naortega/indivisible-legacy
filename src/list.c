@@ -21,6 +21,9 @@ void initList(List *l) {
 }
 
 void deInitList(List *l) {
+	for(ulli i = 0; i < l->size; ++i) {
+		mpz_clear(l->list[i]);
+	}
 	free(l->list);
 }
 
@@ -29,7 +32,7 @@ void addToList(List *l, mpz_t n) {
 		l->size += BLOCK_SIZE;
 		if(unlikely(l->size == 0)) {
 			fprintf(stderr,
-					"size has reached limit of `long long int' type!\n");
+					"Size has reached limit of `long long int' type!\n");
 			exit(1);
 		}
 		void *tmp = realloc(l->list, sizeof(mpz_t) * l->size);

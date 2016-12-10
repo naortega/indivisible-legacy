@@ -40,7 +40,8 @@ int main(void) {
 		// Loop through found primes
 		for(ulli i = 0; i < primes.size; ++i) {
 			// If `num' is divisible by a prime then go to the next number
-			if(mpz_divisible_p(num, primes.list[i]) != 0) goto nextPrime;
+			if(mpz_divisible_p(num, primes.list[i]) != 0)
+				goto nextPrime;
 		}
 
 		// `num' is a prime so we add it to the list and print it
@@ -56,6 +57,7 @@ nextPrime:
 		mpz_add_ui(num, num, 2);
 	} while(likely(run));
 
+	mpz_clear(num);
 	// Deinitialize the list
 	deInitList(&primes);
 	return 0;
