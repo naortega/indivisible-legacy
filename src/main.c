@@ -53,7 +53,7 @@ int main(void) {
 nextPrime:
 		// Add 2 (skip even numbers since they're all divisible by 2)
 		mpz_add_ui(num, num, 2);
-	} while(run);
+	} while(likely(run));
 
 	// Deinitialize the list
 	deInitList(&primes);
