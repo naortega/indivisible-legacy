@@ -28,7 +28,7 @@ int main(void) {
 	// Add 2, a known prime to this list
 	mpz_set_ui(num, 2);
 	addToList(&primes, num);
-	if(unlikely(mpz_out_str(stdout, 10, num) == 0)) {
+	if(mpz_out_str(stdout, 10, num) == 0) {
 		fprintf(stderr, "Could not print to `stdout'!\n");
 		exit(1);
 	}
