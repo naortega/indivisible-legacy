@@ -36,9 +36,17 @@ int main(void) {
 	printf("\n");
 	mpz_add_ui(num, num, 1);
 
+	// Variable for half `num'
+	mpz_t halfNum;
+	mpz_init(halfNum);
+
 	do {
+		// Calculate half of `num'
+		mpz_fdiv_q_ui(halfNum, num, 2);
 		// Loop through found primes
 		for(ulli i = 0; i < primes.size; ++i) {
+			// If the prime we're looking at is >= half of `num' then we can skip the rest
+			if(mpz_cmp(primes.list[i], halfNum) >= 0) break;
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0)
 				goto nextPrime;
@@ -46,7 +54,7 @@ int main(void) {
 
 		// `num' is a prime so we add it to the list and print it
 		addToList(&primes, num);
-		if(unlikely(mpz_out_str(stdout, 10, num) == 0)) {
+		if(mpz_out_str(stdout, 10, num) == 0) {
 			fprintf(stderr, "Could not print to `stdout'!\n");
 			exit(1);
 		}
@@ -55,8 +63,10 @@ int main(void) {
 nextPrime:
 		// Add 2 (skip even numbers since they're all divisible by 2)
 		mpz_add_ui(num, num, 2);
-	} while(likely(run));
+	} while(run);
 
+	// Clear GMP variables
+	mpz_clear(halfNum);
 	mpz_clear(num);
 	// Deinitialize the list
 	deInitList(&primes);
