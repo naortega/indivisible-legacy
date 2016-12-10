@@ -17,4 +17,4 @@ build:
     # Cache .o files for faster compiling
     cache:
         paths:
-            - "*.o"
+            - "build/CMakeFiles/indivisible.dir/src/*.o"
