@@ -16,3 +16,5 @@ Change Log
 	- Algorithm skips half the known primes.
 	- Removed `likely()' and `unlikely()' macros due to lack of information.
 	- Improved performance.
+- v0.4: Parallel Computations
+	- Implemented Parallel computing of prime numbers.
