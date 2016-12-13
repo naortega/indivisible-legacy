@@ -18,3 +18,4 @@ Change Log
 	- Improved performance.
 - v0.4: Parallel Computations
 	- Implemented Parallel computing of prime numbers.
+	- Added extra C99 optimizations.
