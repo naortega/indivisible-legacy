@@ -8,7 +8,7 @@
  */
 #define BLOCK_SIZE 1024
 
-void initList(List *l) {
+void initList(List *restrict l) {
 	l->list = malloc(sizeof(mpz_t) * BLOCK_SIZE);
 	if(!l->list) {
 		fprintf(stderr, "Failed to allocate memory to list!\n");
@@ -18,7 +18,7 @@ void initList(List *l) {
 	l->end = 0;
 }
 
-void deInitList(List *l) {
+void deInitList(List *restrict l) {
 	for(ulli i = 0; i < l->size; ++i) {
 		mpz_clear(l->list[i]);
 	}
