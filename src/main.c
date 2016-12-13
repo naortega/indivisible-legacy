@@ -44,7 +44,7 @@ int main(void) {
 		mpz_fdiv_q_ui(halfNum, num, 2);
 		// Loop through found primes
 		for(ulli i = 0; i < primes.end; ++i) {
-			if(mpz_cmp(primes.list[i], halfNum) >= 0) break;
+			if(mpz_cmp(primes.list[i], halfNum) > 0) break;
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0)
 				goto nextPrime;
