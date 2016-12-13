@@ -20,14 +20,14 @@ typedef struct {
  * failure.
  * @param[in] l A pointer to a List type to be initialized.
  */
-void initList(List *l);
+void initList(List *restrict l);
 
 /**
  * @brief Deinitialize a List.
  * @details Release all memory that has been allocated to the list.
  * @param[in] l A pointer to a List type to be deinitialized.
  */
-void deInitList(List *l);
+void deInitList(List *restrict l);
 
 /**
  * @brief Adds a new item to a List type.
