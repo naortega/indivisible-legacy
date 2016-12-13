@@ -11,7 +11,7 @@ static bool run;
 void leave();
 
 int main(void) {
-	puts("Indivisible v0.4\n");
+	puts("Indivisible v0.5\n");
 
 	// Quit on ^C by setting `run = false'
 	run = true;
