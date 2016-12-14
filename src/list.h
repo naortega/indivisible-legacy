@@ -2,15 +2,13 @@
 #include <gmp.h>
 #include <stdbool.h>
 
-#include "types.h"
-
 /**
  * @brief An infinitely expanding list type.
  */
 typedef struct {
 	mpz_t *list; //!< The list of elements
-	ulli size; //!< How many elements are in the list
-	ulli end; //!< The last element of the list (in use)
+	size_t size; //!< How many elements are in the list
+	size_t end; //!< The last element of the list (in use)
 } List;
 
 /**
