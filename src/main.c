@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 		puts(" -h         print this help information");
 		puts(" -v         print version number of program");
 		puts(" -q         quiet mode");
-		puts(" -b <base>  base in which to print primes between 2 and 62");
+		puts(" -b <base>  base in which to print primes between 2 and 62 (default 10)");
 		puts(" -f <file>  file to save primes to");
 		return 0;
 	} else if(f_version) {
