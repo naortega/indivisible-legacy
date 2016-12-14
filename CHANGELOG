@@ -19,3 +19,6 @@ Change Log
 - v0.4: Fixed Algorithm
 	- Fixed algorithm to actually calculate primes.
 	- Added extra C99 optimizations.
+- v0.5: Minor Changes
+	- Use `size_t' instead of `unsigned long long int'.
+	- Minor optimizations to the algorithm.
