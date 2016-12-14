@@ -15,11 +15,14 @@ void printUsage(char *progName);
 void leave();
 
 int main(int argc, char *argv[]) {
-	bool f_help = false, f_version = false, f_quiet = false;
+	bool f_help = false,
+		 f_version = false,
+		 f_quiet = false;
 	int base = 10;
+	char *file = NULL;
 
 	int c;
-	while((c = getopt(argc, argv, "hvqb:")) != -1) {
+	while((c = getopt(argc, argv, "hvqb:f:")) != -1) {
 		switch(c) {
 			case 'h':
 				f_help = true;
@@ -39,6 +42,9 @@ int main(int argc, char *argv[]) {
 					exit(1);
 				}
 				break;
+			case 'f':
+				file = optarg;
+				break;
 			default:
 				printUsage(argv[0]);
 				exit(1);
@@ -51,6 +57,7 @@ int main(int argc, char *argv[]) {
 		puts(" -v         print version number of program");
 		puts(" -q         quiet mode");
 		puts(" -b <base>  base in which to print primes between 2 and 62");
+		puts(" -f <file>  file to save primes to");
 		return 0;
 	} else if(f_version) {
 		printf("Indivisible %s\n", VERSION);
@@ -79,7 +86,7 @@ int main(int argc, char *argv[]) {
 	if(!f_quiet) {
 		if(mpz_out_str(stdout, base, num) == 0) {
 			fprintf(stderr, "Could not print to `stdout'!\n");
-			exit(1);
+			goto releaseMemory;
 		}
 		printf("\n");
 	}
@@ -107,7 +114,7 @@ int main(int argc, char *argv[]) {
 		if(!f_quiet) {
 			if(mpz_out_str(stdout, base, num) == 0) {
 				fprintf(stderr, "Could not print to `stdout'!\n");
-				exit(1);
+				goto releaseMemory;
 			}
 			printf("\n");
 		}
@@ -118,10 +125,33 @@ nextPrime:
 	} while(run);
 
 	printf("Found %zu primes.\n", primes.end);
-	puts("Clearing memory...");
 	// Clear GMP variables
 	mpz_clear(halfNum);
 	mpz_clear(num);
+
+	if(file != NULL) {
+		FILE *outFile = fopen(file, "w");
+		if(outFile == NULL) {
+			fprintf(stderr, "Failed create file `%s'.\n", file);
+			goto releaseMemory;
+		}
+		printf("Writing primes to `%s'...\n", file);
+		for(size_t i = 0; i < primes.end; ++i) {
+			if(mpz_out_str(outFile, base, primes.list[i]) == 0) {
+				fprintf(stderr, "Error occurred while writing to file `%s'.\n", file);
+				goto releaseMemory;
+			}
+			fprintf(outFile, "\n");
+		}
+		if(fclose(outFile) != 0) {
+			fprintf(stderr, "Failed to close file `%s'.\n", file);
+			goto releaseMemory;
+		}
+		puts("Finished writing primes.");
+	}
+
+releaseMemory:
+	puts("Clearing memory...");
 	// Deinitialize the list
 	deInitList(&primes);
 
