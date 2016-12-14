@@ -7,6 +7,7 @@
 #include "list.h"
 
 static bool run;
+
 void leave();
 
 int main(void) {
@@ -41,7 +42,10 @@ int main(void) {
 	do {
 		// Calculate half of `num'
 		mpz_fdiv_q_ui(halfNum, num, 2);
-		// Loop through found primes
+		/**
+		 * Loop through primes we've found until we get to half of the number
+		 * we're analyzing
+		 */
 		for(size_t i = 0; mpz_cmp(primes.list[i], halfNum) < 0; ++i) {
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0)
@@ -73,6 +77,4 @@ nextPrime:
 	return 0;
 }
 
-void leave() {
-	run = false;
-}
+void leave() { run = false; }

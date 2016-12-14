@@ -1,3 +1,10 @@
+/**
+ * @file list.h
+ * @author Deathsbreed <deathsbreed@themusicinnoise.net>
+ * @brief Code responsible for List management.
+ * @details Code responsible for the definition and management of the
+ * List object.
+ */
 #pragma once
 #include <gmp.h>
 #include <stdbool.h>
@@ -14,8 +21,7 @@ typedef struct {
 /**
  * @brief Initialize a List.
  * @details Initialize the list and its variables, allocating memory
- * to the pointer array inside. Returns true on success and false on
- * failure.
+ * to the pointer array inside.
  * @param[in] l A pointer to a List type to be initialized.
  */
 void initList(List *restrict l);
