@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-#define VERSION "v0.6"
+#define VERSION "v1.0"
 
 static bool run;
 
@@ -15,12 +15,14 @@ void printUsage(char *progName);
 void leave();
 
 int main(int argc, char *argv[]) {
+	// Variables for argument parsing
 	bool f_help = false,
 		 f_version = false,
 		 f_quiet = false;
 	int base = 10;
 	char *file = NULL;
 
+	// Parse commandline arguments
 	int c;
 	while((c = getopt(argc, argv, "hvqb:f:")) != -1) {
 		switch(c) {
@@ -51,6 +53,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	// Act based on which flags were used
 	if(f_help) {
 		printUsage(argv[0]);
 		puts(" -h         print this help information");
