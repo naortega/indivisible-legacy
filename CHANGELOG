@@ -22,3 +22,4 @@ Change Log
 - v0.5: Minor Changes
 	- Use `size_t' instead of `unsigned long long int'.
 	- Minor optimizations to the algorithm.
+	- Added commandline argument parsing.

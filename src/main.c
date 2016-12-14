@@ -65,7 +65,7 @@ nextPrime:
 		mpz_add_ui(num, num, 2);
 	} while(run);
 
-	printf("Found %zu primes\n", primes.end);
+	printf("Found %zu primes.\n", primes.end);
 	puts("Clearing memory...");
 	// Clear GMP variables
 	mpz_clear(halfNum);
