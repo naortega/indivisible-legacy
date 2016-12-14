@@ -130,23 +130,28 @@ nextPrime:
 	mpz_clear(num);
 
 	if(file != NULL) {
-		FILE *outFile = fopen(file, "w");
+		FILE *outFile = fopen(file, "w+");
 		if(outFile == NULL) {
 			fprintf(stderr, "Failed create file `%s'.\n", file);
 			goto releaseMemory;
 		}
 		printf("Writing primes to `%s'...\n", file);
+		puts("0%");
 		for(size_t i = 0; i < primes.end; ++i) {
 			if(mpz_out_str(outFile, base, primes.list[i]) == 0) {
 				fprintf(stderr, "Error occurred while writing to file `%s'.\n", file);
 				goto releaseMemory;
 			}
 			fprintf(outFile, "\n");
+			if(i == primes.end / 4) puts("25%");
+			else if(i == primes.end / 2) puts("50%");
+			else if(i == primes.end * 3 / 4) puts("75%");
 		}
 		if(fclose(outFile) != 0) {
 			fprintf(stderr, "Failed to close file `%s'.\n", file);
 			goto releaseMemory;
 		}
+		puts("100%");
 		puts("Finished writing primes.");
 	}
 
