@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <stdbool.h>
-#include <getopt.h>
+#include <unistd.h>
 #include <gmp.h>
 
 #include "list.h"
@@ -16,9 +16,10 @@ void leave();
 
 int main(int argc, char *argv[]) {
 	bool f_help = false, f_version = false, f_quiet = false;
+	int base = 10;
 
 	int c;
-	while((c = getopt(argc, argv, "hvq")) != -1) {
+	while((c = getopt(argc, argv, "hvqb:")) != -1) {
 		switch(c) {
 			case 'h':
 				f_help = true;
@@ -29,6 +30,15 @@ int main(int argc, char *argv[]) {
 			case 'q':
 				f_quiet = true;
 				break;
+			case 'b':
+				base = atoi(optarg);
+				if(base < 2 || base > 62) {
+					fprintf(stderr,
+							"Invalid base `%d'. Base must be between 2 and 62\n",
+							base);
+					exit(1);
+				}
+				break;
 			default:
 				printUsage(argv[0]);
 				exit(1);
@@ -37,9 +47,10 @@ int main(int argc, char *argv[]) {
 
 	if(f_help) {
 		printUsage(argv[0]);
-		puts(" -h     print this help information");
-		puts(" -v     print version number of program");
-		puts(" -q     quiet mode");
+		puts(" -h         print this help information");
+		puts(" -v         print version number of program");
+		puts(" -q         quiet mode");
+		puts(" -b <base>  base in which to print primes between 2 and 62");
 		return 0;
 	} else if(f_version) {
 		printf("Indivisible %s\n", VERSION);
@@ -66,7 +77,7 @@ int main(int argc, char *argv[]) {
 	mpz_set_ui(num, 2);
 	addToList(&primes, num);
 	if(!f_quiet) {
-		if(mpz_out_str(stdout, 10, num) == 0) {
+		if(mpz_out_str(stdout, base, num) == 0) {
 			fprintf(stderr, "Could not print to `stdout'!\n");
 			exit(1);
 		}
@@ -94,7 +105,7 @@ int main(int argc, char *argv[]) {
 		// `num' is a prime so we add it to the list and print it
 		addToList(&primes, num);
 		if(!f_quiet) {
-			if(mpz_out_str(stdout, 10, num) == 0) {
+			if(mpz_out_str(stdout, base, num) == 0) {
 				fprintf(stderr, "Could not print to `stdout'!\n");
 				exit(1);
 			}
@@ -119,7 +130,7 @@ nextPrime:
 }
 
 void printUsage(char *progName) {
-	printf("%s [-v | -h | -q]\n", progName);
+	printf("%s [options...]\n", progName);
 }
 
 void leave() { run = false; }
