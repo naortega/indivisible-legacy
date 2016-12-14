@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-#define VERSION "v0.5"
+#define VERSION "v0.6"
 
 static bool run;
 

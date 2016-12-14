@@ -23,3 +23,7 @@ Change Log
 	- Use `size_t' instead of `unsigned long long int'.
 	- Minor optimizations to the algorithm.
 	- Added commandline argument parsing.
+- v0.6: User Control
+	- Allow user to choose base in which the prime numbers are printed.
+	- Give option for primes to be saved to a file upon exit.
+	- Free memory and leave instead of emergency exit.
