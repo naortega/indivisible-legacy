@@ -4,7 +4,6 @@
 
 /**
  * This is the number of elements by which the list expands.
- * WARNING: Always use doubles for this number (2^X)
  */
 #define BLOCK_SIZE 1024
 
