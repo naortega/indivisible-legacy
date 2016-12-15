@@ -32,7 +32,7 @@ void addToList(List *l, mpz_t n) {
 			fprintf(stderr, "Failed to allocate more memory to list!\n");
 			exit(1);
 		}
-		l->list = (mpz_t*)tmp;
+		l->list = tmp;
 	}
 	mpz_init(l->list[l->end]);
 	mpz_set(l->list[l->end++], n);
