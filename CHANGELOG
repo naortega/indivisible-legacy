@@ -27,4 +27,5 @@ Change Log
 	- Allow user to choose base in which the prime numbers are printed.
 	- Give option for primes to be saved to a file upon exit.
 	- Free memory and leave instead of emergency exit.
-- v1.0: Parallel Computing
+- v0.7: Additional Functionality
+	- Allow user to save found primes to be loaded later.
