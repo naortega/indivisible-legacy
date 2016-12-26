@@ -6,6 +6,7 @@
 #include <gmp.h>
 
 #include "list.h"
+#include "files.h"
 
 #define VERSION "v1.0"
 
@@ -22,10 +23,11 @@ int main(int argc, char *argv[]) {
 	int base = 10;
 	char *ofile = NULL;
 	char *ifile = NULL;
+	char *efile = NULL;
 
 	// Parse commandline arguments
 	int c;
-	while((c = getopt(argc, argv, "hvqb:o:i:")) != -1) {
+	while((c = getopt(argc, argv, "hvqb:o:i:e:")) != -1) {
 		switch(c) {
 			case 'h':
 				f_help = true;
@@ -51,9 +53,12 @@ int main(int argc, char *argv[]) {
 			case 'i':
 				ifile = optarg;
 				break;
+			case 'e':
+				efile = optarg;
+				break;
 			default:
 				printUsage(argv[0]);
-				exit(1);
+				return 1;
 		}
 	}
 
@@ -66,6 +71,7 @@ int main(int argc, char *argv[]) {
 		puts(" -b <base>  base in which to print primes between 2 and 62 (default 10)");
 		puts(" -o <file>  file to save primes to");
 		puts(" -i <file>  file to read primes from a previous session");
+		puts(" -e <file>  export input file to plain text format");
 		return 0;
 	} else if(f_version) {
 		printf("Indivisible %s\n", VERSION);
@@ -76,9 +82,12 @@ int main(int argc, char *argv[]) {
 	run = true;
 	signal(SIGINT, leave);
 
-	if(f_quiet) {
-		puts("Use Ctrl+C (SIGINT) to exit.");
+	if(efile != NULL && ifile == NULL) {
+		fprintf(stderr, "There must be an input file to export! Use `-h' for help.\n");
+		return 1;
 	}
+
+	int exitCode = 0;
 
 	// Primes we've found
 	List primes;
@@ -88,6 +97,12 @@ int main(int argc, char *argv[]) {
 	mpz_t num;
 	mpz_init(num);
 
+	// Variable for half `num'
+	mpz_t halfNum;
+	mpz_init(halfNum);
+
+	if(efile == NULL) puts("Use Ctrl+C to exit.");
+
 	if(ifile == NULL) {
 		// Add 2, a known prime to this list
 		mpz_set_ui(num, 2);
@@ -95,6 +110,7 @@ int main(int argc, char *argv[]) {
 		if(!f_quiet) {
 			if(mpz_out_str(stdout, base, num) == 0) {
 				fprintf(stderr, "Could not print to `stdout'!\n");
+				exitCode = 1;
 				goto releaseMemory;
 			}
 			printf("\n");
@@ -102,24 +118,37 @@ int main(int argc, char *argv[]) {
 		mpz_add_ui(num, num, 1);
 	} else {
 		// Load primes from file
-		FILE *pFile = fopen(ifile, "r");
-		if(pFile == NULL) {
-			fprintf(stderr, "Failed to open primes file `%s'.\n", ifile);
+		int err = inputPrimes(ifile, &primes);
+
+		if(err == 0) {
+			printf("Loaded %zu primes.\n", primes.end);
+		} else {
+			if(err == 1)
+				fprintf(stderr, "Failed to open Indivisible file `%s'.\n", ifile);
+			else if(err == 2)
+				fprintf(stderr, "Failed to close Indivisible file `%s'.\n", ifile);
+			exitCode = 1;
 			goto releaseMemory;
 		}
-		while(mpz_inp_raw(num, pFile) != 0) {
-			addToList(&primes, num);
-		}
-		if(fclose(pFile) != 0) {
-			fprintf(stderr, "Failed to close file `%s'.\n", ifile);
-			goto releaseMemory;
-		}
-		printf("Loaded %zu primes.\n", primes.end);
+		mpz_set(num, primes.list[primes.end]);
 	}
 
-	// Variable for half `num'
-	mpz_t halfNum;
-	mpz_init(halfNum);
+	if(efile != NULL) {
+		int err = exportPrimes(efile, &primes, base);
+
+		if(err == 0) {
+			puts("Successfully exported primes.");
+		} else {
+			if(err == 1)
+				fprintf(stderr, "Failed to open/create plain text file `%s'.\n", efile);
+			else if(err == 2)
+				fprintf(stderr, "Failed to close plain text file `%s'.\n", efile);
+			else if(err == 3)
+				fprintf(stderr, "Failed to write prime to plain text file `%s'.\n", efile);
+			exitCode = 1;
+		}
+		goto releaseMemory;
+	}
 
 	do {
 		// Calculate half of `num'
@@ -139,6 +168,7 @@ int main(int argc, char *argv[]) {
 		if(!f_quiet) {
 			if(mpz_out_str(stdout, base, num) == 0) {
 				fprintf(stderr, "Could not print to `stdout'!\n");
+				exitCode = 1;
 				goto releaseMemory;
 			}
 			printf("\n");
@@ -150,42 +180,34 @@ nextPrime:
 	} while(run);
 
 	printf("Found %zu primes.\n", primes.end);
-	// Clear GMP variables
-	mpz_clear(halfNum);
-	mpz_clear(num);
 
 	if(ofile != NULL) {
-		FILE *outFile = fopen(ofile, "w+");
-		if(outFile == NULL) {
-			fprintf(stderr, "Failed create file `%s'.\n", ofile);
+		int err = outputPrimes(ofile, &primes);
+		if(err == 0) {
+			puts("Successfully saved primes.");
+		} else {
+			if(err == 1)
+				fprintf(stderr, "Failed to open/create file `%s'.\n", ofile);
+			else if(err == 2)
+				fprintf(stderr, "Failed to close file `%s'.\n", ofile);
+			else if(err == 3)
+				fprintf(stderr, "Failed while writing a prime to `%s'.\n", ofile);
+			exitCode = 1;
 			goto releaseMemory;
 		}
-		printf("Writing primes to `%s'...\n", ofile);
-		puts("0%");
-		for(size_t i = 0; i < primes.end; ++i) {
-			if(mpz_out_raw(outFile, primes.list[i]) == 0) {
-				fprintf(stderr, "Error occurred while writing to file `%s'.\n", ofile);
-				goto releaseMemory;
-			}
-			if(i == primes.end / 4) puts("25%");
-			else if(i == primes.end / 2) puts("50%");
-			else if(i == primes.end * 3 / 4) puts("75%");
-		}
-		if(fclose(outFile) != 0) {
-			fprintf(stderr, "Failed to close file `%s'.\n", ofile);
-			goto releaseMemory;
-		}
-		puts("100%");
-		puts("Finished writing primes.");
+
 	}
 
 releaseMemory:
 	puts("Clearing memory...");
+	// Clear GMP variables
+	mpz_clear(halfNum);
+	mpz_clear(num);
 	// Deinitialize the list
 	deInitList(&primes);
 
 	puts("Exit successful.");
-	return 0;
+	return exitCode;
 }
 
 void printUsage(char *progName) {

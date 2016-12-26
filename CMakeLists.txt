@@ -21,6 +21,7 @@ include_directories(
 
 set(SRCS
 	src/main.c
+	src/files.c
 	src/list.c)
 
 # Define the C flags.
