@@ -14,6 +14,7 @@ set(CMAKE_MODULE_PATH
 	${CMAKE_SOURCE_DIR}/cmake/)
 
 find_package(GMP REQUIRED)
+find_package(OpenMP REQUIRED)
 
 include_directories(
 	${GMP_INCLUDE_DIR})
@@ -23,7 +24,7 @@ set(SRCS
 	src/list.c)
 
 # Define the C flags.
-set(CMAKE_C_FLAGS "-std=gnu99 -Wall -Wextra -Werror -Wfatal-errors -Wmissing-declarations -pedantic-errors")
+set(CMAKE_C_FLAGS "-std=gnu99 ${OpenMP_C_FLAGS} -Wall -Wextra -Werror -Wfatal-errors -Wmissing-declarations -pedantic-errors")
 set(CMAKE_C_FLAGS_DEBUG "-g -O0")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-g -O3")

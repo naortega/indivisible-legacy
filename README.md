@@ -9,6 +9,7 @@ Building
 There are multiple dependencies to install before compiling the project:
 - CMake
 - GMP
+- OpenMP
 
 Once the dependencies are installed you can compile by running the following from the root directory of the project:
 ```bash
