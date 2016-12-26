@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
 			fprintf(stderr, "Failed to open primes file `%s'.\n", ifile);
 			goto releaseMemory;
 		}
-		while(mpz_inp_str(num, pFile, base) != 0) {
+		while(mpz_inp_raw(num, pFile) != 0) {
 			addToList(&primes, num);
 		}
 		if(fclose(pFile) != 0) {
@@ -163,11 +163,10 @@ nextPrime:
 		printf("Writing primes to `%s'...\n", ofile);
 		puts("0%");
 		for(size_t i = 0; i < primes.end; ++i) {
-			if(mpz_out_str(outFile, base, primes.list[i]) == 0) {
+			if(mpz_out_raw(outFile, primes.list[i]) == 0) {
 				fprintf(stderr, "Error occurred while writing to file `%s'.\n", ofile);
 				goto releaseMemory;
 			}
-			fprintf(outFile, "\n");
 			if(i == primes.end / 4) puts("25%");
 			else if(i == primes.end / 2) puts("50%");
 			else if(i == primes.end * 3 / 4) puts("75%");
