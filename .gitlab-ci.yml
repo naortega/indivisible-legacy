@@ -4,7 +4,7 @@ build:
     stage: build
     # Install dependencies
     before_script:
-        - apt update && apt -y install cmake libgmp-dev
+        - apt update && apt -y install cmake libgmp-dev libgomp1
     # Build the project
     script:
         - cd build/
