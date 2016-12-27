@@ -12,7 +12,8 @@
  * @param file File to input primes from.
  * @param list List to load primes into.
  * @returns If 0 then load was successful, if 1 then failed to open,
- * if 2 failed to close.
+ * if 2 failed to close, if 3 failed to allocate new memory to List
+ * (see `addToList()')
  */
 int inputPrimes(char *file, List *list);
 

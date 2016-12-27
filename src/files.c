@@ -12,7 +12,9 @@ int inputPrimes(char *file, List *list) {
 	if(pFile == NULL) return 1;
 	mpz_t n;
 	mpz_init(n);
-	while(mpz_inp_raw(n, pFile) != 0) addToList(list, n);
+	while(mpz_inp_raw(n, pFile) != 0) {
+		if(addToList(list, n) == 1) return 3;
+	}
 	if(fclose(pFile) != 0) return 2;
 	return 0;
 }

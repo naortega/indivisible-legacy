@@ -23,8 +23,9 @@ typedef struct {
  * @details Initialize the list and its variables, allocating memory
  * to the pointer array inside.
  * @param[in] l A pointer to a List type to be initialized.
+ * @returns Returns 0 if successful and 1 if failed.
  */
-void initList(List *restrict l);
+int initList(List *restrict l);
 
 /**
  * @brief Deinitialize a List.
@@ -38,5 +39,6 @@ void deInitList(List *restrict l);
  * @details Add item `n' at the end of a List type.
  * @param[out] l List to which the variable should be appended.
  * @param[in] n variable to be appended to the list.
+ * @returns Returns 0 if successful and 1 if failed.
  */
-void addToList(List *l, mpz_t n);
+int addToList(List *restrict l, mpz_t n);

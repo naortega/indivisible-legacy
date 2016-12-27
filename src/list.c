@@ -7,14 +7,12 @@
  */
 #define BLOCK_SIZE 1024
 
-void initList(List *restrict l) {
+int initList(List *restrict l) {
 	l->list = malloc(sizeof(mpz_t) * BLOCK_SIZE);
-	if(!l->list) {
-		fprintf(stderr, "Failed to allocate memory to list!\n");
-		exit(1);
-	}
+	if(!l->list) return 1;
 	l->size = BLOCK_SIZE;
 	l->end = 0;
+	return 0;
 }
 
 void deInitList(List *restrict l) {
@@ -24,16 +22,14 @@ void deInitList(List *restrict l) {
 	free(l->list);
 }
 
-void addToList(List *l, mpz_t n) {
+int addToList(List *restrict l, mpz_t n) {
 	if(l->end == l->size) {
 		l->size += BLOCK_SIZE;
 		void *tmp = realloc(l->list, sizeof(mpz_t) * l->size);
-		if(!tmp) {
-			fprintf(stderr, "Failed to allocate more memory to list!\n");
-			exit(1);
-		}
+		if(!tmp) return 1;
 		l->list = tmp;
 	}
 	mpz_init(l->list[l->end]);
 	mpz_set(l->list[l->end++], n);
+	return 0;
 }

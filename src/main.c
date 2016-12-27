@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 					fprintf(stderr,
 							"Invalid base `%d'. Base must be between 2 and 62.\n",
 							base);
-					exit(1);
+					return 1;
 				}
 				break;
 			case 'f':
@@ -93,7 +93,10 @@ int main(int argc, char *argv[]) {
 
 	// Primes we've found
 	List primes;
-	initList(&primes);
+	if(initList(&primes) == 1) {
+		fprintf(stderr, "Failed to initialize primes list.\n");
+		exit(1);
+	}
 
 	// The number we're going to be testing for
 	mpz_t num;
@@ -108,13 +111,13 @@ int main(int argc, char *argv[]) {
 	if(newFile) {
 		// Add 2, a known prime to this list
 		mpz_set_ui(num, 2);
-		addToList(&primes, num);
+		if(addToList(&primes, num) == 1) {
+			fprintf(stderr, "Failed to allocate more memory for list.\n");
+			goto releaseMemory;
+		}
 		if(!f_quiet) {
-			if(mpz_out_str(stdout, base, num) == 0) {
+			if(mpz_out_str(stdout, base, num) == 0)
 				fprintf(stderr, "Could not print to `stdout'!\n");
-				exitCode = 1;
-				goto releaseMemory;
-			}
 			printf("\n");
 		}
 		mpz_add_ui(num, num, 1);
@@ -129,6 +132,8 @@ int main(int argc, char *argv[]) {
 				fprintf(stderr, "Failed to open Indivisible file `%s'.\n", file);
 			else if(err == 2)
 				fprintf(stderr, "Failed to close Indivisible file `%s'.\n", file);
+			else if(err == 3)
+				fprintf(stderr, "Failed to allocate more memory for list.\n");
 			exitCode = 1;
 			goto releaseMemory;
 		}
@@ -170,13 +175,13 @@ int main(int argc, char *argv[]) {
 		}
 
 		// `num' is a prime so we add it to the list and print it
-		addToList(&primes, num);
+		if(addToList(&primes, num) == 1) {
+			fprintf(stderr, "Failed to allocate more memory for list.\n");
+			goto releaseMemory;
+		}
 		if(!f_quiet) {
-			if(mpz_out_str(stdout, base, num) == 0) {
+			if(mpz_out_str(stdout, base, num) == 0)
 				fprintf(stderr, "Could not print to `stdout'!\n");
-				exitCode = 1;
-				goto releaseMemory;
-			}
 			printf("\n");
 		}
 
