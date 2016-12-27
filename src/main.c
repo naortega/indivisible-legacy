@@ -132,7 +132,11 @@ int main(int argc, char *argv[]) {
 			exitCode = 1;
 			goto releaseMemory;
 		}
-		mpz_set(num, primes.list[primes.end]);
+		/**
+		 * Yes, I realize there's a -1 here, I don't know why but it won't
+		 * work if it's not there, so don't change it unless necessary.
+		 */
+		mpz_set(num, primes.list[primes.end-1]);
 	}
 
 	if(efile != NULL) {
