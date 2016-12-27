@@ -10,7 +10,7 @@
 #include "list.h"
 #include "files.h"
 
-#define VERSION "v1.0"
+#define VERSION "v0.7"
 
 static bool run;
 
