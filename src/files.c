@@ -41,13 +41,15 @@ int exportPrimes(char *file, List *list, int base) {
 	// Assert safeguards
 	assert(file != NULL);
 	assert(list != NULL);
+	assert(list->list != NULL);
 
 	FILE *eFile = fopen(file, "w");
 	if(eFile == NULL) return 1;
 	printf("Exporting primes to `%s'...\n", file);
 	puts("0%");
 	for(size_t i = 0; i < list->end; ++i) {
-		if(mpz_out_str(eFile, list->list[i], base) == 0) return 3;
+		if(mpz_out_str(eFile, base, list->list[i]) == 0) return 3;
+		fprintf(eFile, "\n");
 		if(i == list->end / 4) puts("25%");
 		else if(i == list->end / 2) puts("50%");
 		else if(i == list->end * 3 / 4) puts("75%");
