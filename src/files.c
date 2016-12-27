@@ -1,8 +1,13 @@
 #include "files.h"
 #include <stdio.h>
 #include <gmp.h>
+#include <assert.h>
 
 int inputPrimes(char *file, List *list) {
+	// Assert safeguards
+	assert(file != NULL);
+	assert(list != NULL);
+
 	FILE *pFile = fopen(file, "r");
 	if(pFile == NULL) return 1;
 	mpz_t n;
@@ -13,6 +18,10 @@ int inputPrimes(char *file, List *list) {
 }
 
 int outputPrimes(char *file, List *list) {
+	// Assert safeguards
+	assert(file != NULL);
+	assert(list != NULL);
+
 	FILE *oFile = fopen(file, "w");
 	if(oFile == NULL) return 1;
 	printf("Saving primes to `%s'...\n", file);
@@ -29,6 +38,10 @@ int outputPrimes(char *file, List *list) {
 }
 
 int exportPrimes(char *file, List *list, int base) {
+	// Assert safeguards
+	assert(file != NULL);
+	assert(list != NULL);
+
 	FILE *eFile = fopen(file, "w");
 	if(eFile == NULL) return 1;
 	printf("Exporting primes to `%s'...\n", file);
