@@ -63,12 +63,13 @@ int main(int argc, char *argv[]) {
 	// Act based on which flags were used
 	if(f_help) {
 		printUsage(argv[0]);
+		puts("\nArguments:");
 		puts(" -h         print this help information");
 		puts(" -v         print version number of program");
 		puts(" -q         quiet mode");
 		puts(" -b <base>  base in which to print primes between 2 and 62 (default 10)");
 		puts(" -f <file>  file in/from which primes are stored and read from in raw format");
-		puts(" -e <file>  export input file to plain text format");
+		puts(" -e <file>  export input file to plain text format\n");
 		return 0;
 	} else if(f_version) {
 		printf("Indivisible %s\n", VERSION);
@@ -209,12 +210,11 @@ nextPrime:
 
 	}
 
+releaseMemory:
+	puts("Clearing memory...");
 	// Clear GMP variables
 	mpz_clear(halfNum);
 	mpz_clear(num);
-
-releaseMemory:
-	puts("Clearing memory...");
 	// Deinitialize the list
 	deInitList(&primes);
 
@@ -223,7 +223,8 @@ releaseMemory:
 }
 
 void printUsage(char *progName) {
-	printf("%s [OPTIONS]\n", progName);
+	printf("%s [-f <file>] [-q] [-b <base>]\n", progName);
+	printf("%s -f <file> -e <file>\n", progName);
 }
 
 void leave() { run = false; }
