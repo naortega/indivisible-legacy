@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
 		for(size_t i = 0; mpz_cmp(primes.list[i], halfNum) < 0; ++i) {
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0)
-				goto nextPrime;
+				goto nextNum;
 		}
 
 		// `num' is a prime so we add it to the list and print it
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
 			printf("\n");
 		}
 
-nextPrime:
+nextNum:
 		// Add 2 (skip even numbers since they're all divisible by 2)
 		mpz_add_ui(num, num, 2);
 	} while(run);

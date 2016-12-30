@@ -7,7 +7,6 @@
  */
 #pragma once
 #include <gmp.h>
-#include <stdbool.h>
 
 /**
  * @brief An infinitely expanding list type.

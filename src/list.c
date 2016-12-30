@@ -1,6 +1,5 @@
 #include "list.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 /**
  * This is the number of elements by which the list expands.
