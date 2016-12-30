@@ -116,12 +116,16 @@ int main(int argc, char *argv[]) {
 			fprintf(stderr, "Failed to allocate more memory for list.\n");
 			goto releaseMemory;
 		}
-		if(!f_quiet) {
-			if(mpz_out_str(stdout, base, num) == 0)
-				fprintf(stderr, "Could not print to `stdout'!\n");
-			printf("\n");
+		// Add 3 as well to optimize the algorithm
+		mpz_set_ui(num, 3);
+		if(addToList(&primes, num) == 1) {
+			fprintf(stderr, "Failed to allocate more memory for list.\n");
+			goto releaseMemory;
 		}
-		mpz_add_ui(num, num, 1);
+		if(!f_quiet) {
+			puts("2\n3");
+		}
+		mpz_add_ui(num, num, 2);
 	} else {
 		// Load primes from file
 		int err = inputPrimes(file, &primes);
@@ -167,9 +171,10 @@ int main(int argc, char *argv[]) {
 		mpz_fdiv_q_ui(halfNum, num, 2);
 		/**
 		 * Loop through primes we've found until we get to half of the number
-		 * we're analyzing
+		 * we're analyzing. Also, skip `2' since we're not testing even
+		 * numbers.
 		 */
-		for(size_t i = 0; mpz_cmp(primes.list[i], halfNum) < 0; ++i) {
+		for(size_t i = 1; mpz_cmp(primes.list[i], halfNum) < 0; ++i) {
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0)
 				goto nextNum;
