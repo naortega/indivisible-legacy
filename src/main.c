@@ -104,8 +104,8 @@ int main(int argc, char *argv[]) {
 	mpz_init(num);
 
 	// Variable for half `num'
-	mpz_t halfNum;
-	mpz_init(halfNum);
+	mpz_t numRoot;
+	mpz_init(numRoot);
 
 	if(efile == NULL) puts("Use Ctrl+C to exit.");
 
@@ -167,14 +167,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	do {
-		// Calculate half of `num'
-		mpz_fdiv_q_ui(halfNum, num, 2);
+		// Calculate the sqrt(num)
+		mpz_sqrt(numRoot, num);
 		/**
 		 * Loop through primes we've found until we get to half of the number
 		 * we're analyzing. Also, skip `2' since we're not testing even
 		 * numbers.
 		 */
-		for(size_t i = 1; mpz_cmp(primes.list[i], halfNum) < 0; ++i) {
+		for(size_t i = 1; mpz_cmp(primes.list[i], numRoot) <= 0; ++i) {
 			// If `num' is divisible by a prime then go to the next number
 			if(mpz_divisible_p(num, primes.list[i]) != 0)
 				goto nextNum;
@@ -218,7 +218,7 @@ nextNum:
 releaseMemory:
 	puts("Clearing memory...");
 	// Clear GMP variables
-	mpz_clear(halfNum);
+	mpz_clear(numRoot);
 	mpz_clear(num);
 	// Deinitialize the list
 	deInitList(&primes);
