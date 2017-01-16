@@ -21,7 +21,7 @@ void deInitList(List *restrict l) {
 	free(l->list);
 }
 
-int addToList(List *restrict l, mpz_t n) {
+int addToList(List *l, mpz_t n) {
 	if(l->end == l->size) {
 		l->size += BLOCK_SIZE;
 		void *tmp = realloc(l->list, sizeof(mpz_t) * l->size);
