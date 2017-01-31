@@ -163,7 +163,7 @@ int main(int argc, char *argv[]) {
 		goto releaseMemory;
 	}
 
-#pragma omp parallel shared(run, num)
+#pragma omp parallel default(shared)
 	{
 		// Variable for sqrt of `privNum'
 		mpz_t numRoot;
@@ -172,16 +172,21 @@ int main(int argc, char *argv[]) {
 		mpz_t privNum;
 		mpz_init(privNum);
 		mpz_add_ui(privNum, num, omp_get_thread_num() * 2);
-		/*mpz_out_str(stdout, base, privNum);*/
-		/*printf("-\n");*/
 #pragma omp barrier
 
 		do {
 			// Calculate the sqrt(num)
 			mpz_sqrt(numRoot, privNum);
+#pragma omp critical
+			{
+				mpz_out_str(stdout, base, numRoot);
+				printf(" - ");
+				mpz_out_str(stdout, base, privNum);
+				printf("\n");
+			}
 
 			// Make sure a number larger than numRoot exists
-			while(mpz_cmp(primes.list[primes.end], numRoot) <= 0) {
+			while(mpz_cmp(primes.list[primes.end], numRoot) < 0) {
 				if(!run)
 					goto leaveLoop;
 			}
