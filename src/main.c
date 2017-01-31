@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <gmp.h>
+#include <omp.h>
 
 #include <sys/stat.h>
 
@@ -103,10 +104,6 @@ int main(int argc, char *argv[]) {
 	mpz_t num;
 	mpz_init(num);
 
-	// Variable for half `num'
-	mpz_t numRoot;
-	mpz_init(numRoot);
-
 	if(efile == NULL) puts("Use Ctrl+C to exit.");
 
 	if(newFile) {
@@ -166,35 +163,63 @@ int main(int argc, char *argv[]) {
 		goto releaseMemory;
 	}
 
-	do {
-		// Calculate the sqrt(num)
-		mpz_sqrt(numRoot, num);
-		/**
-		 * Loop through primes we've found until we get to half of the number
-		 * we're analyzing. Also, skip `2' since we're not testing even
-		 * numbers.
-		 */
-		for(size_t i = 1; mpz_cmp(primes.list[i], numRoot) <= 0; ++i) {
-			// If `num' is divisible by a prime then go to the next number
-			if(mpz_divisible_p(num, primes.list[i]) != 0)
-				goto nextNum;
-		}
+#pragma omp parallel shared(run, num)
+	{
+		// Variable for sqrt of `privNum'
+		mpz_t numRoot;
+		mpz_init(numRoot);
 
-		// `num' is a prime so we add it to the list and print it
-		if(addToList(&primes, num) == 1) {
-			fprintf(stderr, "Failed to allocate more memory for list.\n");
-			goto releaseMemory;
-		}
-		if(!f_quiet) {
-			if(mpz_out_str(stdout, base, num) == 0)
-				fprintf(stderr, "Could not print to `stdout'!\n");
-			printf("\n");
-		}
+		mpz_t privNum;
+		mpz_init(privNum);
+		mpz_add_ui(privNum, num, omp_get_thread_num() * 2);
+		/*mpz_out_str(stdout, base, privNum);*/
+		/*printf("-\n");*/
+#pragma omp barrier
+
+		do {
+			// Calculate the sqrt(num)
+			mpz_sqrt(numRoot, privNum);
+
+			// Make sure a number larger than numRoot exists
+			while(mpz_cmp(primes.list[primes.end], numRoot) <= 0) {
+				if(!run)
+					goto leaveLoop;
+			}
+
+			/**
+			 * Loop through primes we've found until we get to the sqrt of the
+			 * number we're analyzing. Also, skip `2' since we're not testing even
+			 * numbers.
+			 */
+			for(size_t i = 1; mpz_cmp(primes.list[i], numRoot) <= 0; ++i) {
+				// If `num' is divisible by a prime then go to the next number
+				if(mpz_divisible_p(privNum, primes.list[i]) != 0)
+					goto nextNum;
+			}
+
+			// `num' is a prime so we add it to the list and print it
+#pragma omp critical
+			{
+				if(addToList(&primes, privNum) == 1) {
+					fprintf(stderr, "Failed to allocate more memory for list.\n");
+					exitCode = 1;
+					run = false;
+				}
+				if(!f_quiet) {
+					if(mpz_out_str(stdout, base, privNum) == 0)
+						fprintf(stderr, "Could not print to `stdout'!\n");
+					printf("\n");
+				}
+			}
 
 nextNum:
-		// Add 2 (skip even numbers since they're all divisible by 2)
-		mpz_add_ui(num, num, 2);
-	} while(run);
+			mpz_add_ui(privNum, privNum, omp_get_num_threads() * 2);
+		} while(run);
+leaveLoop:
+		mpz_clear(privNum);
+		mpz_clear(numRoot);
+#pragma omp barrier
+	}
 
 	printf("Found %zu primes.\n", primes.end);
 
@@ -218,7 +243,6 @@ nextNum:
 releaseMemory:
 	puts("Clearing memory...");
 	// Clear GMP variables
-	mpz_clear(numRoot);
 	mpz_clear(num);
 	// Deinitialize the list
 	deInitList(&primes);
