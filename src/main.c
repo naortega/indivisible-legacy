@@ -190,23 +190,18 @@ int main(int argc, char *argv[]) {
 		 * number we're analyzing. Also, skip `2' since we're not testing even
 		 * numbers.
 		 */
-		/*for(size_t i = 1; mpz_cmp(primes.list[i], numRoot) <= 0; ++i) {
-			// If `num' is divisible by a prime then go to the next number
-			if(mpz_divisible_p(num, primes.list[i]) != 0) {
-				isPrime = false;
-				break;
-			}
-		}*/
-#pragma omp parallel
+		#pragma omp parallel
 		{
-#pragma omp for
+			#pragma omp for
 			for(size_t i = 1; i < primes.end; ++i) {
-				if(mpz_divisible_p(num, primes.list[i])) {
-#pragma omp atomic write
+				if(mpz_cmp(primes.list[i], numRoot) >= 0) {
+					#pragma omp cancel for
+				} else if(mpz_divisible_p(num, primes.list[i])) {
+					#pragma omp atomic write
 					isPrime = false;
-#pragma omp cancel for
+					#pragma omp cancel for
 				}
-#pragma omp cancellation point for
+				#pragma omp cancellation point for
 			}
 		}
 
