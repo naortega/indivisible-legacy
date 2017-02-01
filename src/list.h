@@ -40,4 +40,4 @@ void deInitList(List *restrict l);
  * @param[in] n variable to be appended to the list.
  * @returns Returns 0 if successful and 1 if failed.
  */
-int addToList(List *l, mpz_t n);
+int addToList(List *restrict l, mpz_t n);

@@ -93,6 +93,19 @@ int main(int argc, char *argv[]) {
 
 	int exitCode = 0;
 
+	if(!omp_get_cancellation()) {
+		puts("Warning: the OpenMP cancellation (`OMP_CANCELLATION') environment variable is not enabled.");
+		char cont = '\0';
+		while(true) {
+			printf("Continue? (y/n) ");
+			scanf("%c", &cont);
+			if(cont == 'y' || cont == 'Y')
+				break;
+			else if(cont == 'n' || cont == 'N')
+				return exitCode;
+		}
+	}
+
 	// Primes we've found
 	List primes;
 	if(initList(&primes) == 1) {
@@ -171,32 +184,49 @@ int main(int argc, char *argv[]) {
 		// Calculate the sqrt(num)
 		mpz_sqrt(numRoot, num);
 
+		bool isPrime = true;
 		/**
 		 * Loop through primes we've found until we get to the sqrt of the
 		 * number we're analyzing. Also, skip `2' since we're not testing even
 		 * numbers.
 		 */
-		for(size_t i = 1; mpz_cmp(primes.list[i], numRoot) <= 0; ++i) {
+		/*for(size_t i = 1; mpz_cmp(primes.list[i], numRoot) <= 0; ++i) {
 			// If `num' is divisible by a prime then go to the next number
-			if(mpz_divisible_p(num, primes.list[i]) != 0)
-				goto nextNum;
+			if(mpz_divisible_p(num, primes.list[i]) != 0) {
+				isPrime = false;
+				break;
+			}
+		}*/
+#pragma omp parallel
+		{
+#pragma omp for
+			for(size_t i = 1; i < primes.end; ++i) {
+				if(mpz_divisible_p(num, primes.list[i])) {
+#pragma omp atomic write
+					isPrime = false;
+#pragma omp cancel for
+				}
+#pragma omp cancellation point for
+			}
 		}
 
-		// `num' is a prime so we add it to the list and print it
-		if(addToList(&primes, num) == 1) {
-			fprintf(stderr, "Failed to allocate more memory for list.\n");
-			exitCode = 1;
-			run = false;
-		}
-		if(!f_quiet) {
-			if(mpz_out_str(stdout, base, num) == 0)
-				fprintf(stderr, "Could not print to `stdout'!\n");
-			printf("\n");
+		if(isPrime) {
+			// `num' is a prime so we add it to the list and print it
+			if(addToList(&primes, num) == 1) {
+				fprintf(stderr, "Failed to allocate more memory for list.\n");
+				exitCode = 1;
+				run = false;
+			}
+			if(!f_quiet) {
+				if(mpz_out_str(stdout, base, num) == 0)
+					fprintf(stderr, "Could not print to `stdout'!\n");
+				printf("\n");
+			}
 		}
 
-nextNum:
 		mpz_add_ui(num, num, 2);
 	}
+
 	mpz_clear(numRoot);
 
 	printf("Found %zu primes.\n", primes.end);
