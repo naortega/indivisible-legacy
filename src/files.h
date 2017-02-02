@@ -28,10 +28,10 @@ int outputPrimes(char *file, List *list);
 
 /**
  * @brief Export primes from a List to a plain text file.
- * @param file File to output primes as plain text to.
- * @param list List to read primes from.
+ * @param efile File to export primes as plain text to.
+ * @param dfile File to read primes from.
  * @param base The base in which the primes will be written.
  * @returns If 0 then load was successful, if 1 then failed to open,
  * if 2 failed to close, if 3 failed when writing.
  */
-int exportPrimes(char *file, List *list, int base);
+int exportPrimes(char *efile, char *dfile, int base);

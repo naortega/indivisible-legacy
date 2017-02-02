@@ -31,4 +31,6 @@ Change Log
 	- Allow user to save found primes to be loaded later.
 	- User can save and read primes in raw output.
 - v1.0: Parallelization
-	- Indivisible is now completely parallelized.
+	- Now completely parallelized.
+	- Cleaned up/organized the code-base
+	- Exporting files uses less memory

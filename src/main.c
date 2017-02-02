@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 		 f_version = false,
 		 f_quiet = false;
 	int base = 10;
-	char *file = NULL;
+	char *dfile = NULL;
 	char *efile = NULL;
 
 	// Parse commandline arguments
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case 'f':
-				file = optarg;
+				dfile = optarg;
 				break;
 			case 'e':
 				efile = optarg;
@@ -75,36 +75,51 @@ int main(int argc, char *argv[]) {
 	} else if(f_version) {
 		printf("Indivisible %s\n", VERSION);
 		return 0;
+	} else if(f_quiet && !dfile) {
+		puts("Error: you cannot run in quiet mode without specifying a data file.");
+		printUsage(argv[0]);
+		return 0;
+	}
+
+	if(efile && !dfile) {
+		puts("Error: you must have a file to export to.");
+		printUsage(argv[0]);
+		return 0;
+	} else if(efile && dfile) {
+		exportPrimes(efile, dfile, base);
+		return 0;
+	}
+
+	if(!omp_get_cancellation()) {
+		puts("Warning: the OpenMP cancellation environment variable (`OMP_CANCELLATION') is not enabled.");
+		char in;
+		while(true) {
+			printf("[e]nable/[c]ontinue/[q]uit? ");
+			scanf("%c", &in);
+			if(in == 'e' || in == 'E') {
+				putenv("OMP_CANCELLATION=true");
+				execv(argv[0], argv);
+			} else if(in == 'c' || in == 'C') {
+				break;
+			} else if(in == 'q' || in == 'Q') {
+				return 0;
+			}
+		}
 	}
 
 	// Quit on ^C by setting `run = false'
 	run = true;
 	signal(SIGINT, leave);
 
-	if(efile != NULL && file == NULL) {
-		fprintf(stderr, "There must be an input file to export! Use `-h' for help.\n");
-		return 1;
-	}
+	puts("Use Ctrl+C to exit.");
+
 	bool newFile = true;
-	if(file != NULL) {
+	if(dfile) {
 		struct stat s;
-		if(stat(file, &s) == 0) newFile = false;
+		if(stat(dfile, &s) == 0) newFile = false;
 	}
 
 	int exitCode = 0;
-
-	if(!omp_get_cancellation() && efile == NULL) {
-		puts("Warning: the OpenMP cancellation (`OMP_CANCELLATION') environment variable is not enabled.");
-		char cont = '\0';
-		while(true) {
-			printf("Continue? (y/n) ");
-			scanf("%c", &cont);
-			if(cont == 'y' || cont == 'Y')
-				break;
-			else if(cont == 'n' || cont == 'N')
-				return exitCode;
-		}
-	}
 
 	// Primes we've found
 	List primes;
@@ -117,19 +132,25 @@ int main(int argc, char *argv[]) {
 	mpz_t num;
 	mpz_init(num);
 
-	if(efile == NULL) puts("Use Ctrl+C to exit.");
+	// Variable for sqrt of `num'
+	mpz_t numRoot;
+	mpz_init(numRoot);
+	// Index of the prime number above and closest to `numRoot'
+	size_t rootInd = 0;
 
 	if(newFile) {
 		// Add 2, a known prime to this list
 		mpz_set_ui(num, 2);
 		if(addToList(&primes, num) == 1) {
 			fprintf(stderr, "Failed to allocate more memory for list.\n");
+			exitCode = 1;
 			goto releaseMemory;
 		}
 		// Add 3 as well to optimize the algorithm
 		mpz_set_ui(num, 3);
 		if(addToList(&primes, num) == 1) {
 			fprintf(stderr, "Failed to allocate more memory for list.\n");
+			exitCode = 1;
 			goto releaseMemory;
 		}
 		if(!f_quiet) {
@@ -137,52 +158,31 @@ int main(int argc, char *argv[]) {
 		}
 	} else {
 		// Load primes from file
-		int err = inputPrimes(file, &primes);
+		int err = inputPrimes(dfile, &primes);
 
 		if(err == 0) {
 			printf("Loaded %zu primes.\n", primes.end);
 		} else {
 			if(err == 1)
-				fprintf(stderr, "Failed to open Indivisible file `%s'.\n", file);
+				fprintf(stderr, "Failed to open Indivisible file `%s'.\n", dfile);
 			else if(err == 2)
-				fprintf(stderr, "Failed to close Indivisible file `%s'.\n", file);
+				fprintf(stderr, "Failed to close Indivisible file `%s'.\n", dfile);
 			else if(err == 3)
 				fprintf(stderr, "Failed to allocate more memory for list.\n");
 			exitCode = 1;
 			goto releaseMemory;
 		}
 		/**
-		 * Yes, I realize there's a -1 here, I don't know why but it won't
-		 * work if it's not there, so don't change it unless necessary.
+		 * I set to `primes.end-1' because primes.end indicates the next new
+		 * element in the list that can be used, which is also equal to the total
+		 * number of elements in the list.
 		 */
 		mpz_set(num, primes.list[primes.end-1]);
 	}
 
-	if(efile != NULL) {
-		int err = exportPrimes(efile, &primes, base);
-
-		if(err == 0) {
-			puts("Successfully exported primes.");
-		} else {
-			if(err == 1)
-				fprintf(stderr, "Failed to open/create plain text file `%s'.\n", efile);
-			else if(err == 2)
-				fprintf(stderr, "Failed to close plain text file `%s'.\n", efile);
-			else if(err == 3)
-				fprintf(stderr, "Failed to write prime to plain text file `%s'.\n", efile);
-			exitCode = 1;
-		}
-		goto releaseMemory;
-	}
-
-	// Variable for sqrt of `privNum'
-	mpz_t numRoot;
-	mpz_init(numRoot);
-	mpz_add_ui(num, num, 2);
-
-	size_t rootInd = 0;
-
 	while(run) {
+		mpz_add_ui(num, num, 2);
+
 		// Calculate the sqrt(num)
 		mpz_sqrt(numRoot, num);
 
@@ -216,32 +216,31 @@ int main(int argc, char *argv[]) {
 			// `num' is a prime so we add it to the list and print it
 			if(addToList(&primes, num) == 1) {
 				fprintf(stderr, "Failed to allocate more memory for list.\n");
+				exitCode = 1;
 				goto releaseMemory;
 			}
 			if(!f_quiet) {
-				if(mpz_out_str(stdout, base, num) == 0)
+				if(!mpz_out_str(stdout, base, num))
 					fprintf(stderr, "Could not print to `stdout'!\n");
 				printf("\n");
 			}
 		}
-
-		mpz_add_ui(num, num, 2);
 	}
 
 
 	printf("Found %zu primes.\n", primes.end);
 
-	if(file != NULL) {
-		int err = outputPrimes(file, &primes);
+	if(dfile) {
+		int err = outputPrimes(dfile, &primes);
 		if(err == 0) {
 			puts("Successfully saved primes.");
 		} else {
 			if(err == 1)
-				fprintf(stderr, "Failed to open/create file `%s'.\n", file);
+				fprintf(stderr, "Failed to open/create file `%s'.\n", dfile);
 			else if(err == 2)
-				fprintf(stderr, "Failed to close file `%s'.\n", file);
+				fprintf(stderr, "Failed to close file `%s'.\n", dfile);
 			else if(err == 3)
-				fprintf(stderr, "Failed while writing a prime to `%s'.\n", file);
+				fprintf(stderr, "Failed while writing a prime to `%s'.\n", dfile);
 			exitCode = 1;
 			goto releaseMemory;
 		}
@@ -261,8 +260,7 @@ releaseMemory:
 }
 
 void printUsage(char *progName) {
-	printf("%s [-f <file>] [-q] [-b <base>]\n", progName);
-	printf("%s -f <file> -e <file>\n", progName);
+	printf("%s [[-f <file> [-e <file> | -q]] [-b <base>] | [-h] | [-v]]\n", progName);
 }
 
 void leave() { run = false; }

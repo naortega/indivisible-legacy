@@ -5,59 +5,60 @@
 
 int inputPrimes(char *file, List *list) {
 	// Assert safeguards
-	assert(file != NULL);
-	assert(list != NULL);
+	assert(file);
+	assert(list);
 
-	FILE *pFile = fopen(file, "r");
-	if(pFile == NULL) return 1;
+	FILE *in = fopen(file, "r");
+	if(!in) return 1;
 	mpz_t n;
 	mpz_init(n);
-	while(mpz_inp_raw(n, pFile) != 0) {
+	while(mpz_inp_raw(n, in))
 		if(addToList(list, n) == 1) return 3;
-	}
-	if(fclose(pFile) != 0) return 2;
+
+	if(fclose(in)) return 2;
 	return 0;
 }
 
 int outputPrimes(char *file, List *list) {
 	// Assert safeguards
-	assert(file != NULL);
-	assert(list != NULL);
+	assert(file);
+	assert(list);
 
-	FILE *oFile = fopen(file, "w");
-	if(oFile == NULL) return 1;
+	FILE *out = fopen(file, "w");
+	if(!out) return 1;
+
 	printf("Saving primes to `%s'...\n", file);
 	puts("0%");
 	for(size_t i = 0; i < list->end; ++i) {
-		if(mpz_out_raw(oFile, list->list[i]) == 0) return 3;
+		if(!mpz_out_raw(out, list->list[i])) return 3;
 		if(i == list->end / 4) puts("25%");
 		else if(i == list->end / 2) puts("50%");
 		else if(i == list->end * 3 / 4) puts("75%");
 	}
 	puts("100%");
-	if(fclose(oFile) != 0) return 2;
+
+	if(fclose(out)) return 2;
 	return 0;
 }
 
-int exportPrimes(char *file, List *list, int base) {
+int exportPrimes(char *efile, char *dfile, int base) {
 	// Assert safeguards
-	assert(file != NULL);
-	assert(list != NULL);
-	assert(list->list != NULL);
+	assert(efile);
+	assert(dfile);
 
-	FILE *eFile = fopen(file, "w");
-	if(eFile == NULL) return 1;
-	printf("Exporting primes to `%s'...\n", file);
-	puts("0%");
-	for(size_t i = 0; i < list->end; ++i) {
-		if(mpz_out_str(eFile, base, list->list[i]) == 0) return 3;
-		fprintf(eFile, "\n");
-		if(i == list->end / 4) puts("25%");
-		else if(i == list->end / 2) puts("50%");
-		else if(i == list->end * 3 / 4) puts("75%");
+	FILE *in = fopen(dfile, "r");
+	FILE *out = fopen(efile, "w");
+	if(!in || !out) return 1;
+
+	printf("Exporting primes to `%s'...\n", efile);
+	mpz_t n;
+	mpz_init(n);
+	while(mpz_inp_raw(n, in)) {
+		if(!mpz_out_str(out, base, n)) return 3;
+		fprintf(out, "\n");
 	}
-	puts("100%");
-	if(fclose(eFile) != 0) return 2;
-	puts("Finished exporting primes.");
+
+	if(fclose(in) || fclose(out)) return 2;
+
 	return 0;
 }
