@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
 
 	int exitCode = 0;
 
-	if(!omp_get_cancellation()) {
+	if(!omp_get_cancellation() && efile == NULL) {
 		puts("Warning: the OpenMP cancellation (`OMP_CANCELLATION') environment variable is not enabled.");
 		char cont = '\0';
 		while(true) {
@@ -180,9 +180,18 @@ int main(int argc, char *argv[]) {
 	mpz_init(numRoot);
 	mpz_add_ui(num, num, 2);
 
+	size_t rootInd = 0;
+
 	while(run) {
 		// Calculate the sqrt(num)
 		mpz_sqrt(numRoot, num);
+
+		while(mpz_cmp(primes.list[rootInd], numRoot) <= 0) {
+			if(++rootInd > primes.end) {
+				fprintf(stderr, "Error: `rootInd' surpassed `primes.end'.\n");
+				goto releaseMemory;
+			}
+		}
 
 		bool isPrime = true;
 		/**
@@ -193,10 +202,8 @@ int main(int argc, char *argv[]) {
 		#pragma omp parallel
 		{
 			#pragma omp for
-			for(size_t i = 1; i < primes.end; ++i) {
-				if(mpz_cmp(primes.list[i], numRoot) >= 0) {
-					#pragma omp cancel for
-				} else if(mpz_divisible_p(num, primes.list[i])) {
+			for(size_t i = 1; i < rootInd; ++i) {
+				if(mpz_divisible_p(num, primes.list[i])) {
 					#pragma omp atomic write
 					isPrime = false;
 					#pragma omp cancel for
@@ -209,8 +216,7 @@ int main(int argc, char *argv[]) {
 			// `num' is a prime so we add it to the list and print it
 			if(addToList(&primes, num) == 1) {
 				fprintf(stderr, "Failed to allocate more memory for list.\n");
-				exitCode = 1;
-				run = false;
+				goto releaseMemory;
 			}
 			if(!f_quiet) {
 				if(mpz_out_str(stdout, base, num) == 0)
@@ -222,7 +228,6 @@ int main(int argc, char *argv[]) {
 		mpz_add_ui(num, num, 2);
 	}
 
-	mpz_clear(numRoot);
 
 	printf("Found %zu primes.\n", primes.end);
 
@@ -246,6 +251,7 @@ int main(int argc, char *argv[]) {
 releaseMemory:
 	puts("Clearing memory...");
 	// Clear GMP variables
+	mpz_clear(numRoot);
 	mpz_clear(num);
 	// Deinitialize the list
 	deInitList(&primes);
