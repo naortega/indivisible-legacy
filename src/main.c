@@ -24,12 +24,13 @@ int main(int argc, char *argv[]) {
 		 f_version = false,
 		 f_quiet = false;
 	int base = 10;
+	size_t n_prime = 0;
 	char *dfile = NULL;
 	char *efile = NULL;
 
 	// Parse commandline arguments
 	int c;
-	while((c = getopt(argc, argv, "hvqb:f:e:")) != -1) {
+	while((c = getopt(argc, argv, "hvqb:f:e:n:")) != -1) {
 		switch(c) {
 			case 'h':
 				f_help = true;
@@ -55,6 +56,14 @@ int main(int argc, char *argv[]) {
 			case 'e':
 				efile = optarg;
 				break;
+			case 'n':
+				n_prime = atoi(optarg);
+				if(n_prime <= 2) {
+					fprintf(stderr,
+							"`n' must be larger than 2 (first two primes are 2 and 3).\n");
+					return 1;
+				}
+				break;
 			default:
 				printUsage(argv[0]);
 				return 1;
@@ -70,7 +79,8 @@ int main(int argc, char *argv[]) {
 		puts(" -q         quiet mode");
 		puts(" -b <base>  base in which to print primes between 2 and 62 (default 10)");
 		puts(" -f <file>  file in/from which primes are stored and read from in raw format");
-		puts(" -e <file>  export input file to plain text format\n");
+		puts(" -e <file>  export input file to plain text format");
+		puts(" -n <n>     run until the 'n'th prime\n");
 		return 0;
 	} else if(f_version) {
 		printf("Indivisible %s\n", VERSION);
@@ -225,6 +235,8 @@ int main(int argc, char *argv[]) {
 				printf("\n");
 			}
 		}
+
+		if(primes.end == n_prime) break;
 	}
 
 
@@ -260,7 +272,7 @@ releaseMemory:
 }
 
 void printUsage(char *progName) {
-	printf("%s [[-f <file> [-e <file> | -q]] [-b <base>] | [-h] | [-v]]\n", progName);
+	printf("%s [[-f <file> [-e <file> | -q]] [-b <base>] [-n <n>] | [-h] | [-v]]\n", progName);
 }
 
 void leave() { run = false; }
