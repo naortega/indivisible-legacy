@@ -259,8 +259,8 @@ releaseMemory:
 	return exitCode;
 }
 
-inline void printUsage(char *progName) {
+void printUsage(char *progName) {
 	printf("%s [[-f <file> [-e <file> | -q]] [-b <base>] | [-h] | [-v]]\n", progName);
 }
 
-inline void leave() { run = false; }
+void leave() { run = false; }
