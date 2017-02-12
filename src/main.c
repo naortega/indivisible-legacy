@@ -199,6 +199,7 @@ int main(int argc, char *argv[]) {
 		while(mpz_cmp(primes.list[rootInd], numRoot) <= 0) {
 			if(++rootInd > primes.end) {
 				fprintf(stderr, "Error: `rootInd' surpassed `primes.end'.\n");
+				exitCode = 1;
 				goto releaseMemory;
 			}
 		}

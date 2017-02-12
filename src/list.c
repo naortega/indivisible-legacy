@@ -15,7 +15,7 @@ int initList(List *restrict l) {
 }
 
 void deInitList(List *restrict l) {
-	for(size_t i = 0; i < l->size; ++i) {
+	for(size_t i = 0; i < l->end; ++i) {
 		mpz_clear(l->list[i]);
 	}
 	free(l->list);

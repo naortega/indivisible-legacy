@@ -15,6 +15,8 @@ int inputPrimes(char *file, List *list) {
 	while(mpz_inp_raw(n, in))
 		if(addToList(list, n) == 1) return 3;
 
+	mpz_clear(n);
+
 	if(fclose(in)) return 2;
 	return 0;
 }
