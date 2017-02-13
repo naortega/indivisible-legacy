@@ -22,7 +22,7 @@ To build a release build run `cmake -DCMAKE_BUILD_TYPE=Release ..` instead.
 
 Contributing
 ------------
-If you would like to contribute to Uhn then please read the [contributing file](/CONTRIBUTING.md) before creating a merge request.
+If you would like to contribute to Indivisible then please read the [contributing file](/CONTRIBUTING.md) before sending a patch or creating a merge request.
 
 License
 -------
