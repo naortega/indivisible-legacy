@@ -1,6 +1,6 @@
 Contributing
 ============
-We gladly accept contributions to Indivisible (in the form of merge requests **xor** patch files, send them to <deathsbreed@themusicinnoise.net>), however there are a few guidelines that must be followed.
+We gladly accept contributions to Indivisible (send Git patches to <deathsbreed@themusicinnoise.net>), however there are a few guidelines that must be followed.
 
 1) Copyright & Licensing
 ------------------------
@@ -8,7 +8,7 @@ The copyright of this project and all of its code, unless stated otherwise, belo
 
 2) Documentation
 ----------------
-All new features added must be well documented using DOxygen style comments. If your patch adds a new feature and it is not well documented we will ask you to finish documenting the code before accepting a merge. This is simply so that both the maintainers of this repo and other users can understand the new API that bas been added.
+All new features added must be well documented using DOxygen style comments. If your patch adds a new feature and it is not well documented we will ask you to finish documenting the code before accepting a patch. This is simply so that both the maintainers of this repo and other users can understand the new API that bas been added.
 
 3) Code-Style
 -------------
