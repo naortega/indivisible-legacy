@@ -34,3 +34,5 @@ Change Log
 	- Now completely parallelized.
 	- Cleaned up/organized the code-base
 	- Exporting files uses less memory
+	- Allow searching for the nth prime number
+	- Clearing some memory leaks
