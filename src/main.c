@@ -128,6 +128,8 @@ int main(int argc, char *argv[]) {
 		struct stat s;
 		if(stat(dfile, &s) == 0) newFile = false;
 	}
+	// Last position added from file
+	size_t startPos = 0;
 
 	int exitCode = 0;
 
@@ -169,6 +171,7 @@ int main(int argc, char *argv[]) {
 	} else {
 		// Load primes from file
 		int err = inputPrimes(dfile, &primes);
+		startPos = primes.end;
 
 		if(err == 0) {
 			printf("Loaded %zu primes.\n", primes.end);
@@ -244,7 +247,7 @@ int main(int argc, char *argv[]) {
 	printf("Found %zu primes.\n", primes.end);
 
 	if(dfile) {
-		int err = outputPrimes(dfile, &primes);
+		int err = outputPrimes(dfile, &primes, startPos);
 		if(err == 0) {
 			puts("Successfully saved primes.");
 		} else {

@@ -21,10 +21,12 @@ int inputPrimes(char *file, List *list);
  * @brief Output primes from a List into an Indivisible file.
  * @param file File to output primes to.
  * @param list List to read primes from.
+ * @param startPos The position in the List of primes at which to append
+ * to the file.
  * @returns If 0 then load was successful, if 1 then failed to open,
  * if 2 failed to close, if 3 failed when writing.
  */
-int outputPrimes(char *file, List *list);
+int outputPrimes(char *file, List *list, size_t startPos);
 
 /**
  * @brief Export primes from a List to a plain text file.

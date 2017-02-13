@@ -21,17 +21,17 @@ int inputPrimes(char *file, List *list) {
 	return 0;
 }
 
-int outputPrimes(char *file, List *list) {
+int outputPrimes(char *file, List *list, size_t startPos) {
 	// Assert safeguards
 	assert(file);
 	assert(list);
 
-	FILE *out = fopen(file, "w");
+	FILE *out = fopen(file, "a");
 	if(!out) return 1;
 
 	printf("Saving primes to `%s'...\n", file);
 	puts("0%");
-	for(size_t i = 0; i < list->end; ++i) {
+	for(size_t i = startPos; i < list->end; ++i) {
 		if(!mpz_out_raw(out, list->list[i])) return 3;
 		if(i == list->end / 4) puts("25%");
 		else if(i == list->end / 2) puts("50%");
