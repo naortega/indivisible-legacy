@@ -1,6 +1,6 @@
 Contributing
 ============
-We gladly accept contributions to Indivisible (in the form of merge requests **and** patch files, send them to <deathsbreed@themusicinnoise.net>), however there are a few guidelines that must be followed.
+We gladly accept contributions to Indivisible (in the form of merge requests **xor** patch files, send them to <deathsbreed@themusicinnoise.net>), however there are a few guidelines that must be followed.
 
 1) Copyright & Licensing
 ------------------------
