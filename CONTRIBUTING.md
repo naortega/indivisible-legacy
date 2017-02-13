@@ -1,6 +1,6 @@
 Contributing
 ============
-We gladly accept contributions to Indivisible, however there are a few guidelines that must be followed.
+We gladly accept contributions to Indivisible (in the form of merge requests **and** patch files, send them to <deathsbreed@themusicinnoise.net>), however there are a few guidelines that must be followed.
 
 1) Copyright & Licensing
 ------------------------
@@ -8,7 +8,7 @@ The copyright of this project and all of its code, unless stated otherwise, belo
 
 2) Documentation
 ----------------
-All new features added must be well documented using DOxygen style comments. If your merge request adds a new feature and it is not well documented we will ask you to finish documenting the code before accepting a merge. This is simply so that both the maintainers of this repo and other users can understand the new API that bas been added.
+All new features added must be well documented using DOxygen style comments. If your patch adds a new feature and it is not well documented we will ask you to finish documenting the code before accepting a merge. This is simply so that both the maintainers of this repo and other users can understand the new API that bas been added.
 
 3) Code-Style
 -------------
@@ -16,8 +16,8 @@ The only aspects that will be religiously upheld for all contributions to this r
 
 Things that would be nice is if you could avoid having the lines being too long, and please avoid having more than one empty line in a row.
 
-4) Fractured Merge Requests
----------------------------
-Please make sure your merge requests are fractured into separate parts so that it may be easy for us to deal with them individually. The reason for this is to avoid having merge requests that both fix bugs and add features when in reality they should be separate requests. The only exception to this will be if the changes made to the code depend on one another to function properly.
+4) Fractured Patches
+--------------------
+Please make sure your patches are fractured into separate parts so that it may be easy for us to deal with them individually. The reason for this is to avoid having patches that both fix bugs and add features when in reality they should be separate requests. The only exception to this will be if the changes made to the code depend on one another to function properly.
 
-If your merge request meets all these requirements and is passed by one of the moderators it will be merged into the main repo.
+If your patch meets all these requirements and is passed by one of the moderators it will be merged into the main repo.
