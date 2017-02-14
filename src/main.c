@@ -114,7 +114,13 @@ int main(int argc, char *argv[]) {
 		printUsage(argv[0]);
 		return 0;
 	} else if(efile && dfile) {
-		exportPrimes(efile, dfile, base);
+		int err = exportPrimes(efile, dfile, base);
+		if(err) {
+			if(err == 1) fprintf(stderr, "Error: failed to open files.\n");
+			else if(err == 2) fprintf(stderr, "Error: failed to close files.\n");
+			else if(err == 3) fprintf(stderr, "Error: failed to write to export file.\n");
+			return 1;
+		}
 		return 0;
 	}
 
