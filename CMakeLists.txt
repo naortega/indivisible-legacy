@@ -22,8 +22,10 @@ cmake_policy(SET CMP0012 OLD)
 set(TARGET_NAME indivisible)
 
 if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Debug)
+	set(CMAKE_BUILD_TYPE "debug")
 endif()
+string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_MODULE_PATH
 	${CMAKE_MODULE_PATH}
@@ -47,8 +49,8 @@ set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-g -O3")
 set(CMAKE_C_FLAGS_MINSIZEREL "-Os")
 
-if(NOT CMAKE_BUILD_TYPE MATCHES Debug AND NOT CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
-	add_definitions(-DNDEBUG)
+if(NOT CMAKE_BUILD_TYPE MATCHES "debug" AND NOT CMAKE_BUILD_TYPE MATCHES "relwithdebinfo")
+	add_definitions("-DNDEBUG")
 endif()
 
 add_executable(${TARGET_NAME} ${SRCS})
