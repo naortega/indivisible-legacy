@@ -51,9 +51,9 @@ int outputPrimes(char *file, List *list, size_t startPos) {
 	puts("0%");
 	for(size_t i = startPos; i < list->end; ++i) {
 		if(!mpz_out_raw(out, list->list[i])) return 3;
-		if(i == list->end / 4) puts("25%");
-		else if(i == list->end / 2) puts("50%");
-		else if(i == list->end * 3 / 4) puts("75%");
+		if(i - startPos == (list->end - startPos) / 4) puts("25%");
+		else if(i - startPos == (list->end - startPos) / 2) puts("50%");
+		else if(i - startPos == (list->end - startPos) * 3 / 4) puts("75%");
 	}
 	puts("100%");
 
