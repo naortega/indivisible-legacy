@@ -57,3 +57,6 @@ add_executable(${TARGET_NAME} ${SRCS})
 
 target_link_libraries(${TARGET_NAME}
 	${GMP_LIBRARY})
+
+install(TARGETS ${TARGET_NAME}
+	RUNTIME DESTINATION "bin")
