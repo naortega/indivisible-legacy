@@ -22,7 +22,9 @@
 /**
  * This is the number of elements by which the list expands.
  */
-#define BLOCK_SIZE 1024
+#ifndef BLOCK_SIZE
+#define BLOCK_SIZE 132120576
+#endif
 
 int initList(List *restrict l) {
 	l->list = malloc(sizeof(mpz_t) * BLOCK_SIZE);
