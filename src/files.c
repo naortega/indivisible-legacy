@@ -26,6 +26,7 @@ int inputPrimes(char *file, List *list) {
 	assert(file);
 	assert(list);
 
+	printf("Loading primes from `%s'...\n", file);
 	FILE *in = fopen(file, "r");
 	if(!in) return 1;
 	mpz_t n;

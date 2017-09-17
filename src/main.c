@@ -21,6 +21,7 @@
 #include <signal.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <string.h>
 #include <gmp.h>
 #include <omp.h>
 
@@ -114,6 +115,10 @@ int main(int argc, char *argv[]) {
 		printUsage(argv[0]);
 		return 0;
 	} else if(efile && dfile) {
+		if(strcmp(efile, dfile) == 0) {
+			fprintf(stderr, "Error: file paths are the same.\n");
+			return 0;
+		}
 		int err = exportPrimes(efile, dfile, base);
 		if(err) {
 			if(err == 1) fprintf(stderr, "Error: failed to open files.\n");
