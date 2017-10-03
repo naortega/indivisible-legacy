@@ -17,8 +17,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(Indivisible)
 
-cmake_policy(SET CMP0012 OLD)
-
 set(TARGET_NAME indivisible)
 
 if(NOT CMAKE_BUILD_TYPE)
