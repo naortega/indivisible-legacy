@@ -2,8 +2,5 @@
 build/*
 !build/.keep
 
-# Ignore documentation
-doc/
-
 # Ignore vim temporary files
 *.sw[a-z]
