@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 2.6)
-project(Indivisible)
+cmake_minimum_required(VERSION 3.0)
+project(Indivisible C)
 
 set(TARGET_NAME indivisible)
 set(TARGET_VERSION "v2.0")
@@ -31,8 +31,10 @@ set(CMAKE_MODULE_PATH
 	${CMAKE_SOURCE_DIR}/cmake/)
 
 find_package(GMP REQUIRED)
+find_package(MPI REQUIRED)
 
 include_directories(
+	${MPI_C_INCLUDE_PATH}
 	${GMP_INCLUDE_DIR})
 
 set(SRCS
@@ -40,7 +42,7 @@ set(SRCS
 	"src/main.c")
 
 # Define the C flags.
-set(CMAKE_C_FLAGS "-std=gnu99 -Wall -Wextra -Werror -Wfatal-errors -Wmissing-declarations -pedantic-errors")
+set(CMAKE_C_FLAGS "-std=gnu99 ${MPI_C_COMPILE_FLAGS} -Wall -Wextra -Werror -Wfatal-errors -Wmissing-declarations -pedantic-errors")
 set(CMAKE_C_FLAGS_DEBUG "-g -O0")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-g -O3")
@@ -57,6 +59,7 @@ add_definitions("-DVERSION=\"${TARGET_VERSION}\"")
 add_executable(${TARGET_NAME} ${SRCS})
 
 target_link_libraries(${TARGET_NAME}
+	${MPI_C_LIBRARIES}
 	${GMP_LIBRARY})
 
 install(TARGETS ${TARGET_NAME}
