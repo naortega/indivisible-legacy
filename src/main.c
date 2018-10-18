@@ -45,6 +45,8 @@ int main(int argc, char *argv[]) {
 		mpz_set_ui(tmp, 2);
 		llist_add(&prime_list, tmp);
 		mpz_clear(tmp);
+		if(args.verbose)
+			puts("2");
 	}
 
 	mpz_t aux;
@@ -64,7 +66,14 @@ int main(int argc, char *argv[]) {
 			item = item->next;
 		}
 		if(is_prime)
+		{
 			llist_add(&prime_list, aux);
+			if(args.verbose)
+			{
+				mpz_out_str(stdout, 10, aux);
+				printf("\n");
+			}
+		}
 		mpz_add_ui(aux, aux, 2);
 	}
 
