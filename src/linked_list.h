@@ -16,12 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#pragma once
 
-#include "global.h"
+#include <gmp.h>
 
-int main() {
-	printf("Indivisible %s\n", VERSION);
+struct llist_item {
+	mpz_t num;
+	struct llist_item *prev;
+	struct llist_item *next;
+};
 
-	return 0;
-}
+struct llist {
+	struct llist_item *first;
+	struct llist_item *last;
+	size_t size;  // size of the list
+};
+
+void llist_init(struct llist *list);
+int llist_add(struct llist *list, mpz_t num);
+void llist_deinit(struct llist *list);

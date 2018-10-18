@@ -36,7 +36,8 @@ include_directories(
 	${GMP_INCLUDE_DIR})
 
 set(SRCS
-	src/main.c)
+	"src/linked_list.c"
+	"src/main.c")
 
 # Define the C flags.
 set(CMAKE_C_FLAGS "-std=gnu99 -Wall -Wextra -Werror -Wfatal-errors -Wmissing-declarations -pedantic-errors")

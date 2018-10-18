@@ -16,12 +16,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#include "linked_list.h"
 
-#include "global.h"
+#include <stdlib.h>
 
-int main() {
-	printf("Indivisible %s\n", VERSION);
+void llist_init(struct llist *list) {
+	list->size = 0;
+	list->first = NULL;
+	list->last = NULL;
+}
 
-	return 0;
+int llist_add(struct llist *list, mpz_t num) {
+	struct llist_item *item =
+		malloc(sizeof(struct llist_item));
+	if(!item)
+		return 0;
+
+	mpz_init(item->num);
+	mpz_set(item->num, num);
+
+	if(!(list->first))
+	{
+		list->first = item;
+		list->last = item;
+	}
+	else
+	{
+		list->last->next = item;
+		list->last = item;
+	}
+	list->size++;
+
+	return 1;
+}
+
+void llist_deinit(struct llist *list) {
+	struct llist_item *i = list->first;
+
+	while(i)
+	{
+		mpz_clear(i->num);
+		struct llist_item *next = i->next;
+		free(i);
+		i = next;
+	}
+
+	list->size = 0;
 }
