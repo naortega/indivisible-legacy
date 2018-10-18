@@ -21,3 +21,41 @@
 #ifndef VERSION
 #	define VERSION "version"
 #endif
+
+/* argp variables */
+const char *argp_program_version = VERSION;
+const char *argp_program_bug_address = "<nortega@themusicinnoise.net>";
+
+/* argp options */
+static char desc[] = "A parallelized prime number generator.";
+/*static char args_doc[] = "--count=<number> [--verbose]";*/
+static struct argp_option opts[] = {
+	{ "count", 'c', "number", 0, "The number of primes to generate (default is 1000)", 0},
+	{ "verbose", 'v', 0, 0, "Print out discovered primes", 0 },
+	{ 0 }
+};
+
+struct args {
+	size_t count;
+	int verbose;
+};
+
+static error_t parse_opt(int key, char *arg, struct argp_state *state) {
+	struct args *args = state->input;
+	switch(key)
+	{
+		case 'c':
+			args->count = (size_t)atol(arg);
+			break;
+		case 'v':
+			args->verbose = 1;
+			break;
+		case ARGP_KEY_ARG:
+			return 0;
+		default:
+			return ARGP_ERR_UNKNOWN;
+	}
+	return 0;
+}
+
+static struct argp argp = { opts, parse_opt, 0, desc, 0, 0, 0 };

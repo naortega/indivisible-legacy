@@ -17,11 +17,60 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <argp.h>
+#include <gmp.h>
 
 #include "global.h"
+#include "linked_list.h"
 
-int main() {
-	printf("Indivisible %s\n", VERSION);
+int main(int argc, char *argv[]) {
+	struct args args = { 1000, 0 };
 
+	argp_parse(&argp, argc, argv, 0, 0, &args);
+
+	if(args.count == 0)
+	{
+		fprintf(stderr, "ERROR: count must be larger than 0.\n");
+		return 1;
+	}
+
+	struct llist prime_list;
+	llist_init(&prime_list);
+
+	{
+		// initialize the list with 2
+		mpz_t tmp;
+		mpz_init(tmp);
+		mpz_set_ui(tmp, 2);
+		llist_add(&prime_list, tmp);
+		mpz_clear(tmp);
+	}
+
+	mpz_t aux;
+	mpz_init(aux);
+	mpz_set_ui(aux, 3);
+	while(prime_list.size < args.count)
+	{
+		struct llist_item *item = prime_list.first;
+		int is_prime = 1;
+		while(item)
+		{
+			if(mpz_divisible_p(aux, item->num))
+			{
+				is_prime = 0;
+				break;
+			}
+			item = item->next;
+		}
+		if(is_prime)
+			llist_add(&prime_list, aux);
+		mpz_add_ui(aux, aux, 2);
+	}
+
+	printf("The %zu prime is ", prime_list.size);
+	mpz_out_str(stdout, 10, prime_list.last->num);
+
+	llist_deinit(&prime_list);
 	return 0;
 }
