@@ -18,6 +18,7 @@ cmake_minimum_required(VERSION 2.6)
 project(Indivisible)
 
 set(TARGET_NAME indivisible)
+set(TARGET_VERSION "v2.0")
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "release")
@@ -49,6 +50,8 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "debug" AND NOT CMAKE_BUILD_TYPE MATCHES "relwit
 else()
 	add_definitions("-DDEBUG")
 endif()
+
+add_definitions("-DVERSION=\"${TARGET_VERSION}\"")
 
 add_executable(${TARGET_NAME} ${SRCS})
 
