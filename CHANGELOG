@@ -1,38 +1,42 @@
 Change Log
 ==========
 
-- v0.1: Initial release
-	- Basic prime calculation.
-	- Uses a growing vector of known primes and gets the modulus of the number divided by these primes.
-	- Uses type `long long' to hold prime numbers.
-- v0.2: Multi-Precision
-	- Switch to C.
-	- Uses GNU Multiple Precision library (GMP) to hold prime numbers, allowing for 'infinite' size.
-	- Add `likely()' and `unlikely()' macros to optimize.
-- v0.2.1: Memory Leak Fixes
-	- Fixed a major memory leak at the end of the program.
-	- Added more optimizers.
-- v0.3: Optimizations
-	- Algorithm skips half the known primes.
-	- Removed `likely()' and `unlikely()' macros due to lack of information.
-	- Improved performance.
-- v0.4: Fixed Algorithm
-	- Fixed algorithm to actually calculate primes.
-	- Added extra C99 optimizations.
-- v0.5: Minor Changes
-	- Use `size_t' instead of `unsigned long long int'.
-	- Minor optimizations to the algorithm.
-	- Added commandline argument parsing.
-- v0.6: User Control
-	- Allow user to choose base in which the prime numbers are printed.
-	- Give option for primes to be saved to a file upon exit.
-	- Free memory and leave instead of emergency exit.
-- v0.7: Data Saving
-	- Allow user to save found primes to be loaded later.
-	- User can save and read primes in raw output.
-- v1.0: Parallelization
-	- Now completely parallelized.
-	- Cleaned up/organized the code-base
-	- Exporting files uses less memory
-	- Allow searching for the nth prime number
-	- Clearing some memory leaks
+ - v0.1: Initial release
+  - Basic prime calculation.
+  - Uses a growing vector of known primes and gets the modulus of the number divided by these primes.
+  - Uses type `long long' to hold prime numbers.
+ - v0.2: Multi-Precision
+  - Switch to C.
+  - Uses GNU Multiple Precision library (GMP) to hold prime numbers, allowing for 'infinite' size.
+  - Add `likely()' and `unlikely()' macros to optimize.
+ - v0.2.1: Memory Leak Fixes
+  - Fixed a major memory leak at the end of the program.
+  - Added more optimizers.
+ - v0.3: Optimizations
+  - Algorithm skips half the known primes.
+  - Removed `likely()' and `unlikely()' macros due to lack of information.
+  - Improved performance.
+ - v0.4: Fixed Algorithm
+  - Fixed algorithm to actually calculate primes.
+  - Added extra C99 optimizations.
+ - v0.5: Minor Changes
+  - Use `size_t' instead of `unsigned long long int'.
+  - Minor optimizations to the algorithm.
+  - Added commandline argument parsing.
+ - v0.6: User Control
+  - Allow user to choose base in which the prime numbers are printed.
+  - Give option for primes to be saved to a file upon exit.
+  - Free memory and leave instead of emergency exit.
+ - v0.7: Data Saving
+  - Allow user to save found primes to be loaded later.
+  - User can save and read primes in raw output.
+ - v1.0: Parallelization
+  - Now completely parallelized.
+  - Cleaned up/organized the code-base
+  - Exporting files uses less memory
+  - Allow searching for the nth prime number
+  - Clearing some memory leaks
+ - v2.0: Linked List
+  - Implement linked list for faster addition to list.
+  - Multi-Processor support (MPI).
+  - Code cleanup.
