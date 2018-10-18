@@ -56,7 +56,11 @@ int main(int argc, char *argv[]) {
 	{
 		struct llist_item *item = prime_list.first;
 		int is_prime = 1;
-		while(item)
+
+		mpz_t root;
+		mpz_init(root);
+		mpz_sqrt(root, aux);
+		while(item && mpz_cmp(item->num, root) < 0)
 		{
 			if(mpz_divisible_p(aux, item->num))
 			{
@@ -79,6 +83,7 @@ int main(int argc, char *argv[]) {
 
 	printf("The %zu prime is ", prime_list.size);
 	mpz_out_str(stdout, 10, prime_list.last->num);
+	printf("\n");
 
 	llist_deinit(&prime_list);
 	return 0;
