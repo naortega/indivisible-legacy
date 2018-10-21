@@ -41,6 +41,8 @@ set(SRCS
 	"src/linked_list.c"
 	"src/main.c")
 
+set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
+
 # Define the C flags.
 set(CMAKE_C_FLAGS "-std=gnu99 ${MPI_C_COMPILE_FLAGS} -Wall -Wextra -Werror -Wfatal-errors -Wmissing-declarations -pedantic-errors")
 set(CMAKE_C_FLAGS_DEBUG "-g -O0")
