@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2018  Ortega Froysa, Nicolás <nortega@themusicinnoise.net>
- * Author: Ortega Froysa, Nicolás <nortega@themusicinnoise.net>
+ * Copyright (C) 2019  Ortega Froysa, Nicolás <nicolas@ortegas.org>
+ * Author: Ortega Froysa, Nicolás <nicolas@ortegas.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,10 @@
 
 #pragma once
 
-#include <gmp.h>
+#ifndef APP_NAME
+#define APP_NAME "app name"
+#endif
 
-struct llist_item {
-	mpz_t num;
-	struct llist_item *prev;
-	struct llist_item *next;
-};
-
-struct llist {
-	struct llist_item *first;
-	struct llist_item *last;
-	size_t size;  // size of the list
-};
-
-void llist_init(struct llist *list);
-int llist_add(struct llist *list, mpz_t num);
-void llist_deinit(struct llist *list);
+#ifndef VERSION
+#define VERSION "version"
+#endif

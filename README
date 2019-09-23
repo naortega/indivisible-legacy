@@ -1,32 +1,35 @@
 ===================
 *** Indivisible ***
 ===================
-Indivisible is a parallelized prime number generator written in C.
+A parallelized prime number generator written in C. It uses a bignum
+library as well as OpenMPI for parallelization.
 
 # Building
 ----------
-There are multiple dependencies to install before compiling the project:
+## Dependencies
+The dependencies for compiling are minimal, and should be available
+on most UNIX-like systems:
+ - GNU Make
+ - C99 Compiler (GCC is recommended)
+ - GNU Multi-Precision Arithmetics Library (GMP)
+ - OpenMPI
 
- - CMake build system
- - GNU Multi-Precision Arithmetics Library
-
-Once the dependencies are installed you can compile by running the following
-from the root directory of the project:
-
-  cd build/
-  cmake ..
-  make
-
-This will create a release build, to build with debug options append the
-`-DCMAKE_BUILD_TYPE=debug' flag to the `cmake' command.
+## Compiling
+To compile you simply need to run the `make` command, which will
+create the `indivisible` binary file. Additionally you can set the
+following flags by appending them to the `make` command:
+ - `DEBUG=<1|0>`: whether to create a debug or release build. (0 by
+   default)
+ - `PREFIX=<path>`: what base prefix to install the binaries at.
+   (`/usr/local` by default)
 
 # Contributing
 --------------
-To contribute to indivisible you can send patch files to my e-mail[0].
-
-[0] nortega@themusicinnoise.net
+To contribute to the project, please follow the same coding style you
+see in the current code base. Then, either submit a pull request or send
+a patch file to <nicolas@ortegas.org>.
 
 # License
 ---------
-This project is licensed under the GNU General Public License version 3 or
-greater (see `LICENSE' for more information).
+This project is licensed under the terms & conditions of the GNU General
+Public License version 3 or greater (see `LICENSE` file).

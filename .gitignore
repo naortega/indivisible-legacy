@@ -1,6 +1,6 @@
-# Ignore build files
-build/*
-!build/.keep
+# Ignore binary files
+*.o
+indivisible
 
 # Ignore vim temporary files
 *.sw[a-z]

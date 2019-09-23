@@ -37,6 +37,5 @@ Change Log
   - Allow searching for the nth prime number
   - Clearing some memory leaks
  - v2.0: Linked List
-  - Implement linked list for faster addition to list.
-  - Multi-Processor support (MPI).
   - Code cleanup.
+  - Replace OpenMP code with OpenMPI

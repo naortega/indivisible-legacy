@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2018  Ortega Froysa, Nicolás <nortega@themusicinnoise.net>
- * Author: Ortega Froysa, Nicolás <nortega@themusicinnoise.net>
+ * Copyright (C) 2019  Ortega Froysa, Nicolás <nicolas@ortegas.org>
+ * Author: Ortega Froysa, Nicolás <nicolas@ortegas.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,75 +16,56 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "globals.h"
+
+#include <signal.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <argp.h>
 #include <gmp.h>
 
-#include "global.h"
-#include "linked_list.h"
+int run = 1;
 
-int main(int argc, char *argv[]) {
-	struct args args = { 1000, 0 };
+void quit_signal(int signum) {
+	printf("Received signal %d. Ending process...\n", signum);
+	run = 0;
+}
 
-	argp_parse(&argp, argc, argv, 0, 0, &args);
+int main() {
+	printf("%s v%s\n", APP_NAME, VERSION);
 
-	if(args.count == 0)
+	signal(SIGINT, quit_signal);
+
+	mpz_t tnum; // number to be tested for prime-ness
+	mpz_t tsqrt; // square root of tnum
+	mpz_t aux; // auxilary number to test against tnum
+	mpz_t r; // remainder from modulus operation
+
+	mpz_inits(tnum, tsqrt, aux, r, NULL);
+	mpz_set_ui(tnum, 3);
+	mpz_sqrt(tsqrt, tnum);
+
+	while(run)
 	{
-		fprintf(stderr, "ERROR: count must be larger than 0.\n");
-		return 1;
-	}
-
-	struct llist prime_list;
-	llist_init(&prime_list);
-
-	{
-		// initialize the list with 2
-		mpz_t tmp;
-		mpz_init(tmp);
-		mpz_set_ui(tmp, 2);
-		llist_add(&prime_list, tmp);
-		mpz_clear(tmp);
-		if(args.verbose)
-			puts("2");
-	}
-
-	mpz_t aux;
-	mpz_init(aux);
-	mpz_set_ui(aux, 3);
-	while(prime_list.size < args.count)
-	{
-		struct llist_item *item = prime_list.first;
+		mpz_set_ui(aux, 3);
 		int is_prime = 1;
-
-		mpz_t root;
-		mpz_init(root);
-		mpz_sqrt(root, aux);
-		while(item && mpz_cmp(item->num, root) < 0)
+		while(mpz_cmp(aux, tsqrt) <= 0)
 		{
-			if(mpz_divisible_p(aux, item->num))
-			{
+			mpz_mod(r, tnum, aux);
+			if(mpz_cmp_ui(r, 0) == 0)
 				is_prime = 0;
-				break;
-			}
-			item = item->next;
+			mpz_add_ui(aux, aux, 2);
 		}
+
 		if(is_prime)
 		{
-			llist_add(&prime_list, aux);
-			if(args.verbose)
-			{
-				mpz_out_str(stdout, 10, aux);
-				printf("\n");
-			}
+			mpz_out_str(stdout, 10, tnum);
+			printf("\n");
 		}
-		mpz_add_ui(aux, aux, 2);
+
+		mpz_add_ui(tnum, tnum, 2);
+		mpz_sqrt(tsqrt, tnum);
 	}
 
-	printf("The %zu prime is ", prime_list.size);
-	mpz_out_str(stdout, 10, prime_list.last->num);
-	printf("\n");
+	mpz_clears(tnum, tsqrt, aux, r, NULL);
 
-	llist_deinit(&prime_list);
 	return 0;
 }
