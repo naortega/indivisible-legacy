@@ -38,4 +38,5 @@ Change Log
   - Clearing some memory leaks
  - v2.0: Linked List
   - Code cleanup.
-  - Replace OpenMP code with OpenMPI
+  - Replace OpenMP code with OpenMPI.
+  - Use AVL Tree for prime storage
