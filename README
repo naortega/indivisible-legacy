@@ -10,9 +10,8 @@ library as well as OpenMPI for parallelization.
 The dependencies for compiling are minimal, and should be available
 on most UNIX-like systems:
  - GNU Make
- - C99 Compiler (GCC is recommended)
  - GNU Multi-Precision Arithmetics Library (GMP)
- - OpenMPI
+ - OpenMPI C wrapper compiler (mpicc)
 
 ## Compiling
 To compile you simply need to run the `make` command, which will

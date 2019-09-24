@@ -14,15 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-CC=gcc
+CC=mpicc
 DEBUG=0
 PREFIX=/usr/local
 INCFLAGS=
 LDFLAGS=-lgmp
 DEFS=-DVERSION=\"2.0\" -DAPP_NAME=\"Indivisible\"
 CFLAGS=$(INCFLAGS) $(DEFS) -std=c99 -Wall -Wextra -Wfatal-errors -Werror
-HDRS=src/globals.h
-OBJS=src/main.o
+HDRS=src/globals.h src/llist.h
+OBJS=src/main.o src/llist.o
 
 ifeq ($(DEBUG),1)
 	CFLAGS+=-g -O0 -DDEBUG
