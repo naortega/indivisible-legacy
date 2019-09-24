@@ -17,6 +17,7 @@
  */
 
 #include "globals.h"
+#include "llist.h"
 
 #include <signal.h>
 #include <stdio.h>
