@@ -39,4 +39,4 @@ Change Log
  - v2.0: Linked List
   - Code cleanup.
   - Replace OpenMP code with OpenMPI.
-  - Use AVL Tree for prime storage
+  - Use linked list for prime storage.
