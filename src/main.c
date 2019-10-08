@@ -44,6 +44,8 @@ int main() {
 	mpz_set_ui(tnum, 3);
 	mpz_sqrt(tsqrt, tnum);
 
+	puts("2");
+
 	while(run)
 	{
 		mpz_set_ui(aux, 3);
