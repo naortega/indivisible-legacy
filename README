@@ -11,7 +11,7 @@ The dependencies for compiling are minimal, and should be available
 on most UNIX-like systems:
  - GNU Make
  - GNU Multi-Precision Arithmetics Library (GMP)
- - OpenMPI C wrapper compiler (mpicc)
+ - OpenMPI
 
 ## Compiling
 To compile you simply need to run the `make` command, which will
