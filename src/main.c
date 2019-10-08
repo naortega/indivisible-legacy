@@ -40,7 +40,7 @@ int main() {
 	mpz_t p0, p1; // numbers to be tested for prime-ness.
 
 	mpz_inits(test_base, p0, p1, NULL);
-	mpz_set_ui(test_base, 6);
+	mpz_set_ui(test_base, 6); // test_base = 6*k
 
 	puts("2");
 	puts("3");
@@ -61,7 +61,7 @@ int main() {
 			printf("\n");
 		}
 
-		mpz_add_ui(test_base, test_base, 6);
+		mpz_add_ui(test_base, test_base, 6); // k += 1
 	}
 
 	mpz_clears(test_base, p0, p1, NULL);
