@@ -22,7 +22,7 @@ LDFLAGS=-lgmp
 DEFS=-DVERSION=\"2.0\" -DAPP_NAME=\"Indivisible\"
 CFLAGS=$(INCFLAGS) $(DEFS) -std=c99 -Wall -Wextra -Wfatal-errors -Werror
 HDRS=src/globals.h src/llist.h
-OBJS=src/main.o src/llist.o
+OBJS=src/llist.o src/main.o src/prime_test.o
 
 ifeq ($(DEBUG),1)
 	CFLAGS+=-g -O0 -DDEBUG

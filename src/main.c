@@ -18,6 +18,7 @@
 
 #include "globals.h"
 #include "llist.h"
+#include "prime_test.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -35,40 +36,35 @@ int main() {
 
 	signal(SIGINT, quit_signal);
 
-	mpz_t tnum; // number to be tested for prime-ness
-	mpz_t tsqrt; // square root of tnum
-	mpz_t aux; // auxilary number to test against tnum
-	mpz_t r; // remainder from modulus operation
+	mpz_t test_base; // number used to get tested numbers
+	mpz_t p0, p1; // numbers to be tested for prime-ness.
 
-	mpz_inits(tnum, tsqrt, aux, r, NULL);
-	mpz_set_ui(tnum, 3);
-	mpz_sqrt(tsqrt, tnum);
+	mpz_inits(test_base, p0, p1, NULL);
+	mpz_set_ui(test_base, 6);
 
 	puts("2");
+	puts("3");
 
 	while(run)
 	{
-		mpz_set_ui(aux, 3);
-		int is_prime = 1;
-		while(mpz_cmp(aux, tsqrt) <= 0)
-		{
-			mpz_mod(r, tnum, aux);
-			if(mpz_cmp_ui(r, 0) == 0)
-				is_prime = 0;
-			mpz_add_ui(aux, aux, 2);
-		}
+		mpz_sub_ui(p0, test_base, 1); // p0 = test_base - 1
+		mpz_add_ui(p1, test_base, 1); // p0 = test_base + 1
 
-		if(is_prime)
+		if(test_prime(p0))
 		{
-			mpz_out_str(stdout, 10, tnum);
+			mpz_out_str(stdout, 10, p0);
+			printf("\n");
+		}
+		if(test_prime(p1))
+		{
+			mpz_out_str(stdout, 10, p1);
 			printf("\n");
 		}
 
-		mpz_add_ui(tnum, tnum, 2);
-		mpz_sqrt(tsqrt, tnum);
+		mpz_add_ui(test_base, test_base, 6);
 	}
 
-	mpz_clears(tnum, tsqrt, aux, r, NULL);
+	mpz_clears(test_base, p0, p1, NULL);
 
 	return 0;
 }
