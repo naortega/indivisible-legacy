@@ -17,11 +17,11 @@
  */
 
 #include "globals.h"
+#include <stdio.h>
 #include "llist.h"
 #include "prime_test.h"
 
 #include <signal.h>
-#include <stdio.h>
 #include <gmp.h>
 
 int run = 1;
